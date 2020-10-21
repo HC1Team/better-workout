@@ -8,3 +8,5 @@ your workout routines better! (hopefully, lol)
 
 The project uses React for the front-end and Node.js for the back-end.
 Hopefully it all runs smoothly.
+
+Built for HCI Team project at Georgia Southern University, Fall 2020.
