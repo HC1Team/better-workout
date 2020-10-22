@@ -1,4 +1,4 @@
-# final-project
+# better-workout
 
 Hello all! Welcome to our final project!
 
