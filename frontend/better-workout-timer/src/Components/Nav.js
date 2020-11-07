@@ -11,7 +11,7 @@ class Nav extends Component {
             <li>Home</li>
           </Link>
           <Link className="my-nav" to="/timer">
-            <li>Timer</li>
+            <li>Quick Start/Timer</li>
           </Link>
           <Link className="my-nav" to="/savedRoutines">
             <li>Saved Routines</li>
@@ -19,6 +19,7 @@ class Nav extends Component {
           <Link className="my-nav" to="/createRoutines">
             <li>Create Routines</li>
           </Link>
+          {/* Make Hamburger nav that is hidden */}
         </ul>
       </nav>
     );

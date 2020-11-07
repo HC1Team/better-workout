@@ -20,7 +20,6 @@ class App extends Component {
             <Route path="/savedRoutines" component={SavedRoutines} />
             <Route path="/createRoutines" component={CreateRoutines} />
           </Switch>
-
         </div>
 
 
