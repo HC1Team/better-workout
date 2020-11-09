@@ -1,0 +1,72 @@
+drop database betterworkout;
+create database betterworkout;
+use betterworkout;
+
+create table workouts(
+	nameOfWorkout varchar(50) not null,
+    defaultDescription varchar(50) not null,
+	constraint nameOfWorkout primary key (nameOfWorkout)
+)engine innodb;
+
+create table exercises(
+    exerciseName varchar(50) not null,
+    muscleGroup varchar(50) not null,
+    defaultReps int not null,
+    constraint exerciseName primary key (exerciseName)
+)engine innodb;
+
+create table workoutExercises(
+	workoutID varchar(50) not null,
+    exerciseID varchar(50) not null,
+    timeperexercise int not null,
+    numberofrounds int not null,
+    restbetweenexcersie int not null,
+    restbetweenrounds int not null,
+    foreign key exerciseID (exerciseID) references exercises(exerciseName),
+	foreign key workoutID (workoutID) references workouts(nameOfWorkout)
+)engine innodb;
+
+
+
+
+//insert 
+use betterworkout;
+insert into exercises values ('Push-ups', 'Upper Body', 10);
+insert into exercises values ('Sit-ups', 'Core', 10);
+insert into exercises values ('Burpees', 'Full Body', 10);
+insert into exercises values ('Squats', 'Lower Body', 10);
+
+insert into workouts values ('Gards Routine', 'Testing the database');
+insert into workouts values ('Jordans Routine', 'Testing the database');
+insert into workouts values ('Wills Routine', 'Testing the database');
+insert into workouts values ('Kemis Routine', 'Testing the database');
+
+insert into workoutExercises values ('Gards Routine','Push-ups', 10, 10, 10, 10);
+insert into workoutExercises values ('Gards Routine','Sit-ups', 10, 10, 10, 10);
+insert into workoutExercises values ('Gards Routine','Burpees', 10, 10, 10, 10);
+insert into workoutExercises values ('Gards Routine','Squats', 10, 10, 10, 10);
+
+insert into workoutExercises values ('Jordans Routine','Push-ups', 10, 10, 10, 10);
+insert into workoutExercises values ('Jordans Routine','Sit-ups', 10, 10, 10, 10);
+insert into workoutExercises values ('Jordans Routine','Burpees', 10, 10, 10, 10);
+insert into workoutExercises values ('Jordans Routine','Squats', 10, 10, 10, 10);
+
+insert into workoutExercises values ('Wills Routine','Push-ups', 10, 10, 10, 10);
+insert into workoutExercises values ('Wills Routine','Sit-ups', 10, 10, 10, 10);
+insert into workoutExercises values ('Wills Routine','Burpees', 10, 10, 10, 10);
+insert into workoutExercises values ('Wills Routine','Squats', 10, 10, 10, 10);
+ 
+insert into workoutExercises values ('Kemis Routine','Push-ups', 10, 10, 10, 10);
+insert into workoutExercises values ('Kemis Routine','Sit-ups', 10, 10, 10, 10);
+insert into workoutExercises values ('Kemis Routine','Burpees', 10, 10, 10, 10);
+insert into workoutExercises values ('Kemis Routine','Squats', 10, 10, 10, 10);
+
+
+
+//query
+use betterworkout;
+
+SELECT exerciseID, timeperexercise, numberofrounds, restbetweenexcersie, restbetweenrounds FROM workoutExercises WHERE workoutID like 'Gards%';
+
+
+

@@ -1,0 +1,14 @@
+{
+  "RoutineName": "Routine 1",
+  "NumberOfRounds": 3,
+  "PrepareTime": 20,
+  "CooldownTime": 20,
+  "RestBetweenRounds": 30,
+  "Exercises": [
+    {"name": "pushups", "time": 30, "cooldown": 10},
+    {"name": "plank", "time": 45, "cooldown": 10},
+    {"name": "plank up downs", "time": 45, "cooldown": 10},
+    {"name": "burpees", "time": 60, "cooldown": 15},
+    {"name": "jump rope", "time": 60, "cooldown": 10}
+  ]
+}
