@@ -81,3 +81,41 @@
   /* Flips the svg and makes the animation to move left-to-right */
   transform: scaleX(-1);
 }
+
+.pause-button {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  justify-content: center;
+  /* align-items: center; */
+  align-content: center;
+  margin-top: 40px;
+  height: 60px;
+  width: 60px;
+}
+.pause {
+  align-self: center;
+  align-content: center;
+  margin-bottom: 0;
+  margin-left: 0.8px;
+  height: 40px;
+}
+.play-button {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  justify-content: center;
+  /* align-items: center; */
+  align-content: center;
+  margin-top: 40px;
+  height: 60px;
+  width: 60px;
+  display: none;
+}
+.play {
+  align-self: center;
+  align-content: center;
+  margin-left: 3px;
+  margin-bottom: 4px;
+  /* display: none; */
+}

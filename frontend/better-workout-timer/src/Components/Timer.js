@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './Styles/App.css';
 import './Styles/timer.css'
+import Button from 'react-bootstrap/Button';
+import {FaPause, FaPlay} from 'react-icons/fa';
 
 // start with an initial value of 120 seconds
 // figure out how to get this from the form submit. Database? Cookie? Session?
@@ -9,7 +11,6 @@ const TIME_LIMIT = 20;
 const PREP_TIME_LEFT = 3;
 const COOLDOWN_TIME_LEFT = 20;
 const FULL_DASH_ARRAY = 283;
-
 
 
 // Initially, no time has passed, but this will count up and subtract from the TIME_LEFT
@@ -51,6 +52,7 @@ class Timer extends Component {
     document.getElementById("time-remaining").innerHTML = prepTime[0];
     // this.prepare();
     this.prepare();
+    
   }
 
 
@@ -76,16 +78,32 @@ class Timer extends Component {
   onTimesUp(){
     clearInterval(timerInterval);
   }
-  onTimesUp2(){
-    clearInterval(timerInterval);
-    // Unfortunately can't find way to make Go! and 
-    // document.getElementById("time-remaining").innerHTML = this.formatTimeLeft(timeLeft);
-  }
+  // Starts the timer
+  // Need an overloaded function that will take TIME_LIMIT
   startTimer() {
     timerInterval = setInterval(() => {
       // The amount of time passed increments by one
       timePassed = timePassed += 1;
       timeLeft = TIME_LIMIT - timePassed;
+
+      // The time left label is updated
+      document.getElementById("time-remaining").innerHTML = this.formatTimeLeft(timeLeft);
+
+      this.setCircleDasharray();
+      this.setRemainingPathColor(timeLeft);
+
+      if(timeLeft === 0) {
+        this.onTimesUp();
+      }
+    }, 1000);
+  }
+
+  // Starts timer from given time
+  startTimer2(timeLimit) {
+    timerInterval = setInterval(() => {
+      // The amount of time passed increments by one
+      timePassed = timePassed += 1;
+      timeLeft = timeLimit - timePassed;
 
       // The time left label is updated
       document.getElementById("time-remaining").innerHTML = this.formatTimeLeft(timeLeft);
@@ -143,7 +161,6 @@ class Timer extends Component {
         document.getElementById("base-timer-path-remaining").classList.add(warning.color);
       } 
     }
-
     
 render() {
   let pathClasses = ['base-timer__path-remaining', this.remainingPathColor].join(' ');
@@ -181,13 +198,30 @@ render() {
             {this.formatTimeLeft(timeLeft)}
           </span>
           </div>
-          
         </div>
+        {/* Add button for pause/start */}
+        <div>
+          <Button id="pause" className="pause-button" onClick={function() {pause()}}><FaPause id="pause-icon" className="pause"/></Button>
+          <Button id="play" className="play-button" onClick={function() {play()}}><FaPlay id="play-icon" className="play" /></Button>
+        </div>
+        
       </div>
     );
   }
 }
 
-
+// Pause the timer and change Button to play button
+function pause(){
+  clearInterval(timerInterval);
+  alert("Hello!");
+  document.getElementById("pause").style.display = "none";
+  document.getElementById("play").style.display = "inline-block";
+}
+//start the timer again and change Button to pause button
+function play() {
+  // this.startTimer2(timeLeft);
+  alert("Im in play()!");
+  // Change button back
+}
 
 export default Timer;
