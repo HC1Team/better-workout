@@ -1,29 +1,31 @@
 import React, { Component } from 'react';
 import './Styles/App.css';
+import Nav from 'react-bootstrap/Nav';
+import NavItem from 'react-bootstrap/NavItem';
 import { Link } from 'react-router-dom';
 
-class Nav extends Component {
+class Navigation extends Component {
   render(){
     return (
-      <nav className="my-nav">
-        <ul className="App-nav-links">
+      <Nav className="NAV-my-nav">
+        {/* <ul className="App-nav-links"> */}
           <Link className="my-nav" to="/" >
-            <li>Home</li>
+            <NavItem>Home</NavItem>
           </Link>
           <Link className="my-nav" to="/timer">
-            <li>Quick Start/Timer</li>
+            <NavItem>Quick Start/Timer</NavItem>
           </Link>
           <Link className="my-nav" to="/savedRoutines">
-            <li>Saved Routines</li>
+            <NavItem>Saved Routines</NavItem>
           </Link>
           <Link className="my-nav" to="/createRoutines">
-            <li>Create Routines</li>
+            <NavItem>Create Routines</NavItem>
           </Link>
           {/* Make Hamburger nav that is hidden */}
-        </ul>
-      </nav>
+        {/* </ul> */}
+      </Nav>
     );
   } 
 }
 
-export default Nav;
+export default Navigation;

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './Components/Styles/App.css';
+
 import Home from './Components/Home';
 import Timer from './Components/Timer';
 import SavedRoutines from './Components/SavedRoutines';
 import CreateRoutines from './Components/CreateRoutines';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Nav from './Components/Nav';
+import Navigation from './Components/Nav';
 
 class App extends Component {
 
@@ -13,7 +15,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <Nav />
+          <Navigation />
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/timer" component={Timer} />

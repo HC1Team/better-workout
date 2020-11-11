@@ -54,15 +54,27 @@
   stroke-linecap: round;
 
   /* Makes sure the animation starts at the top of the circle */
-  transition: rotate(90deg);
+  transform: rotate(90deg);
   transform-origin: center;
+
+  /*Try to ease the animations some, so it isn't so choppy */
+  transition: 1s linear all;
+  fill-rule: nonzero;
 
   /* Allows the ring to change color when the color value updates */
   stroke: currentColor;
 }
 
-.base-timer__path-remaining, .green {
+.base-timer__path-remaining,.green {
   stroke: rgb(46, 236, 46);
+}
+
+.base-timer__path-remaining.orange {
+  stroke: orange;
+}
+
+.base-timer__path-remaining.red {
+  stroke: red;
 }
 
 .base-timer__svg {

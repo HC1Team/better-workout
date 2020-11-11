@@ -5,23 +5,41 @@ import './Styles/timer.css'
 // start with an initial value of 120 seconds
 // figure out how to get this from the form submit. Database? Cookie? Session?
 // Pass along some kind of JSON object that describes the workout details. Number of rounds, array of exercises with their times, etc. (An Example of this JSON file can be seen in the Resources folder.)
-const TIME_LEFT = 1120;
+const TIME_LIMIT = 20;
 const PREP_TIME_LEFT = 3;
 const COOLDOWN_TIME_LEFT = 20;
+const FULL_DASH_ARRAY = 283;
+
+
+
 // Initially, no time has passed, but this will count up and subtract from the TIME_LEFT
 let timePassed = 0;
 let prepTimePassed = 0;
 let cooldownTimePassed = 0;
-let timeLeft = TIME_LEFT;
+let timeLeft = TIME_LIMIT
 let prepTimeLeft = PREP_TIME_LEFT;
 let cooldownTimeLeft = COOLDOWN_TIME_LEFT;
 let timerInterval = null;
-let prepTime = ["Ready", "Set", "Go!"];
+// let startTime = `0:${TIME_LIMIT}`;
+let prepTime = ["Ready", "Set", "Go!", ""];
 
+
+// Warning occurs at whatever half time is for any particular exercise.
+const WARNING_THRESHOLD = 10;
+// Alert occurs at half of the WARNING_THRESHOLD time
+const ALERT_THRESHOLD = 5;
 // stuff to handle the path circle
 const COLOR_CODES = {
   info: {
     color: "green"
+  },
+  warning: {
+    color:"orange",
+    threshold: WARNING_THRESHOLD
+  },
+  alert: {
+    color: "red",
+    threshold: ALERT_THRESHOLD
   }
 };
 let remainingPathColor = COLOR_CODES.info.color;
@@ -30,9 +48,9 @@ class Timer extends Component {
 
   componentDidMount() {
     // document.getElementById("time-remaining").innerHTML = "Ready";
-    document.getElementById("time-remaining").innerHTML = this.formatTimeLeft(TIME_LEFT);
+    document.getElementById("time-remaining").innerHTML = prepTime[0];
     // this.prepare();
-    this.startTimer();
+    this.prepare();
   }
 
 
@@ -40,22 +58,44 @@ class Timer extends Component {
     timerInterval = setInterval(() => {
       prepTimePassed = prepTimePassed +=1;
       prepTimeLeft = PREP_TIME_LEFT - prepTimePassed;
-
-      document.getElementById("time-remaining").innerHTML = prepTime[prepTimePassed];
+      if(prepTime[prepTimePassed]===""){
+        document.getElementById("time-remaining").innerHTML = this.formatTimeLeft(TIME_LIMIT);
+      } else {
+        document.getElementById("time-remaining").innerHTML = prepTime[prepTimePassed];
+      }
+      
       if(prepTimeLeft===0) {
+        this.onTimesUp();
+        // document.getElementById("time-remaining").innerHTML = this.formatTimeLeft(timeLeft);
         this.startTimer();
       }
     }, 1000);
     
   }
+
+  onTimesUp(){
+    clearInterval(timerInterval);
+  }
+  onTimesUp2(){
+    clearInterval(timerInterval);
+    // Unfortunately can't find way to make Go! and 
+    // document.getElementById("time-remaining").innerHTML = this.formatTimeLeft(timeLeft);
+  }
   startTimer() {
     timerInterval = setInterval(() => {
       // The amount of time passed increments by one
       timePassed = timePassed += 1;
-      timeLeft = TIME_LEFT - timePassed;
+      timeLeft = TIME_LIMIT - timePassed;
 
       // The time left label is updated
       document.getElementById("time-remaining").innerHTML = this.formatTimeLeft(timeLeft);
+
+      this.setCircleDasharray();
+      this.setRemainingPathColor(timeLeft);
+
+      if(timeLeft === 0) {
+        this.onTimesUp();
+      }
     }, 1000);
   }
 
@@ -75,10 +115,38 @@ class Timer extends Component {
     return `${minutes}:${seconds}`;
     }
     
+    // divides time left by the defined time limit.
+    calculateTimeFraction() {
+      const rawTimeFraction = timeLeft / TIME_LIMIT;
+      return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+    }
+
+    // Update the dasharray calue as time passes, starting with 283
+    setCircleDasharray() {
+      const circleDasharray =`${(
+        this.calculateTimeFraction()*FULL_DASH_ARRAY
+      ).toFixed(0)} 283`;
+      document.getElementById("base-timer-path-remaining").setAttribute("stroke-dasharray", circleDasharray);
+    }
+
+    setRemainingPathColor(timeLeft) {
+      const {alert, warning, info} = COLOR_CODES;
+
+      // If the remaining time is less than or equal to 1/4 time, remove the "warning" class and apply the "alert" class.
+
+      if(timeLeft<=alert.threshold) {
+        document.getElementById("base-timer-path-remaining").classList.remove(warning.color);
+        document.getElementById("base-timer-path-remaining").classList.add(alert.color);
+        // If the remaining time is less than or equal to half time, remove the base color and apply the "warning" class.
+      } else if(timeLeft<=warning.threshold) {
+        document.getElementById("base-timer-path-remaining").classList.remove(info.color);
+        document.getElementById("base-timer-path-remaining").classList.add(warning.color);
+      } 
+    }
 
     
 render() {
-  let pathClasses = ['base-timer__path-remaining', this.reminingPathColor].join(' ');
+  let pathClasses = ['base-timer__path-remaining', this.remainingPathColor].join(' ');
     return (
       <div id="timer" className="App">
         {/* <h1>Timer</h1> */}
