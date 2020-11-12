@@ -40,6 +40,17 @@ render() {
     return (
       <div className="App">
         <h1>Create Routines</h1>
+        <form>
+          <input type = "text" id = "routineName" name = "routineName" placeholder = "Routine Name"></input>
+          <label>Number of Rounds <input type = "text" id = "numberOfRounds" name = "numberOfRounds"></input></label>
+          <label>Rest between Rounds <input type = "text" id = "restBetweenRounds" name = "restBetweenRounds"></input></label>
+         <p><button type = "button">+</button>Add Exercise</p>
+         <div id = "exerciseList">
+           /*This section will be updated using .innerhtml */
+
+         </div>
+         <p><button type = "button">Cancel</button><button type  = "button">Submit</button></p>
+        </form>
       </div>
     );
   }

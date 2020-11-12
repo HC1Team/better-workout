@@ -40,6 +40,11 @@ render() {
     return (
       <div className="App">
         <h1>Saved Routines</h1>
+        <button type = "button">Full Body</button>
+        <div id = "saved routines">
+          /*This section will update with new saved routines using .innerHTML*/
+        </div>
+        <button type = "button">+</button>
       </div>
     );
   }
