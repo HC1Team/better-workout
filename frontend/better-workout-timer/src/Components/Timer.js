@@ -26,6 +26,21 @@ export default function Timer() {
   // let timerInterval2 = null;
   // let startTime = `0:${TIME_LIMIT}`;
   let prepTime = [ "Ready", "Set", "Go!", "" ];
+  // Use this example workout to test out your startWorkout Function
+  var workout = {
+    "RoutineName": "Routine 1",
+    "NumberOfRounds": 3,
+    "PrepareTime": 20,
+    "CooldownTime": 20,
+    "RestBetweenRounds": 30,
+    "Exercises": [
+      {"name": "pushups", "time": 30, "restAfter": 10},
+      {"name": "plank", "time": 45, "restAfter": 10},
+      {"name": "plank up downs", "time": 45, "restAfter": 10},
+      {"name": "burpees", "time": 60, "restAfter": 15},
+      {"name": "jump rope", "time": 60, "restAfter": 10}
+    ]
+  };
 
 
   // Warning occurs at whatever half time is for any particular exercise.
@@ -53,6 +68,8 @@ export default function Timer() {
     document.getElementById( "time-remaining" ).innerHTML = prepTime[ 0 ];
     // prepare();
     prepare();
+    // Ok, so you can access the stuff from the JSON pretty easy. Now just apply it to a function for the timer. Set some mutable variables that are based of the times and get cracking.
+    console.log(workout.Exercises[0].name);
   }, [] );
 
   let onTimesUp = () => {
