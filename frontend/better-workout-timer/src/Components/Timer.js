@@ -4,6 +4,9 @@ import './Styles/timer.css'
 import Button from 'react-bootstrap/Button';
 import { FaPause, FaPlay } from 'react-icons/fa';
 
+
+
+// Make sure to turn off timer when moving from page to page
 export default function Timer() {
   // start with an initial value of 120 seconds
   // figure out how to get this from the form submit. Database? Cookie? Session?
@@ -23,6 +26,8 @@ export default function Timer() {
   let cooldownTimeLeft = COOLDOWN_TIME_LEFT;
   var timerInterval = 0;
   var isPaused = false;
+  var rest = false;
+  var cooldown = false;
   // let timerInterval2 = null;
   // let startTime = `0:${TIME_LIMIT}`;
   let prepTime = [ "Ready", "Set", "Go!", "" ];
@@ -59,6 +64,12 @@ export default function Timer() {
     alert: {
       color: "red",
       threshold: ALERT_THRESHOLD
+    },
+    rest: {
+      color: "lavender"
+    },
+    cooldown: {
+      color: "cornflowerblue"
     }
   };
   let remainingPathColor = COLOR_CODES.info.color;
@@ -70,28 +81,129 @@ export default function Timer() {
     prepare();
     // Ok, so you can access the stuff from the JSON pretty easy. Now just apply it to a function for the timer. Set some mutable variables that are based of the times and get cracking.
     console.log(workout.Exercises[0].name);
+    return () => {
+      onTimesUp();
+    }
   }, [] );
+
 
   let onTimesUp = () => {
     clearInterval( timerInterval );
     timerInterval = 0;
   }
 
-  //Create a startWorkout() function that loops through the appropriate methods for each exercise, rest, rounds, etc.
-  // let startWorkout = () => {
-  //   //Pull all appropriate data from JSON. 
-  //   //May not have to assign separate variables here and just use JSON for all loop related stuff.
-  //   var rounds = 3;
-  //   var restBetweenRounds = 30;
-  //   var workoutCoolDown = 60;
-  //   var exercises = [{"exercise": "pushups", "time": 30, "sets": 10, "restAfter": 10}, {"exercise": "jumping jacks", "time": 30, "sets": 10, "restAfter": 10}, {"exercise": "mountain climbers", "time": 30, "sets": 10, "restAfter": 10}, {"exercise": "burpees", "time": 30, "sets": 8, "restAfter": 10}];
+  //Make this block of code a separate function that you can run in startWorkout to make the timer move
+  // // The amount of time passed increments by one
+  // timePassed = timePassed += 1;
+  // timeLeft = exercises[j].time - timePassed;
 
-  //   // Two for loops
-  //   //Loop ONE: Loop through all the rounds
+  // // The time left label is updated
+  // document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
 
-  //   //Loop TWO: Loop through each exercise. Run the startTimer with correct information for each workout being displayed in timer.
-
+  // setCircleDasharray();
+  // setRemainingPathColor( timeLeft );
+  // if(timeLeft==0) {
+  //   rest = false;
+  //   onTimesUp();
   // }
+
+  //Create a startWorkout() function that loops through the appropriate methods for each exercise, rest, rounds, etc.
+  let startWorkout = () => {
+    //Pull all appropriate data from JSON. 
+    //May not have to assign separate variables here and just use JSON for all loop related stuff.
+    var rounds = workout.NumberOfRounds;
+    var restBetweenRounds = workout.RestBetweenRounds;
+    var workoutCoolDown = workout.CooldownTime;
+    var exercises = workout.Exercises;
+
+    // Two for loops
+    //Loop ONE: Loop through all the rounds
+    for(var i=0, r=rounds; i<rounds; i++, r--) {
+      //Display correct number of rounds
+      document.getElementById("rounds-remaining").innerHTML = r;
+      //Loop TWO: Loop through each exercise. Run the startTimer with correct information for each workout being displayed in timer.
+      for(var j=0; i<exercises.length; j++) {
+        // Display correct workout names
+        if(i<exercises.length-1){
+          document.getElementById("current-exercise").innerHTML = exercises[j].name;
+          document.getElementById("next-up").innerHTML = exercises[j+1].name;
+        } else {
+          document.getElementById("current-exercise").innerHTML = exercises[j].name;
+          document.getElementById("next-up").innerHTML = "rest";
+        }
+        //Start timer for current exercise
+        timeLeft = exercises[j].time;
+        if ( !isPaused ) {
+          timerInterval = setInterval( () => {
+            // The amount of time passed increments by one
+            timePassed = timePassed += 1;
+            timeLeft = exercises[j].time - timePassed;
+    
+            // The time left label is updated
+            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
+    
+            setCircleDasharray();
+            setRemainingPathColor( timeLeft );
+    
+            //Decides whether to move on to next exercise or do restAfter exercise
+            if ( timeLeft === 0 ) {
+              // Check if current exercise has rest after it
+              if(exercises[j].restAfter!=0) {
+                onTimesUp();
+                rest = true;
+                timePassed = 0;
+                timeLeft = exercises[j].restAfter;
+                timerInterval = setInterval( () => {
+                  // The amount of time passed increments by one
+                  timePassed = timePassed += 1;
+                  timeLeft = exercises[j].time - timePassed;
+    
+                  // The time left label is updated
+                  document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
+    
+                  setCircleDasharray();
+                  setRemainingPathColor( timeLeft );
+                  if(timeLeft==0) {
+                    rest = false;
+                    onTimesUp();
+                  }
+                }, 1000);
+              } else if(j==exercises.length-1 && workout.RestBetweenRounds!=0){
+                //Run the rest timer and change current exercise and nextup labels
+                document.getElementById("current-exercise").innerHTML = "rest";
+                document.getElementById("next-up").innerHTML = exercises[0].name;
+                onTimesUp();
+                rest = true;
+                timePassed = 0;
+                timeLeft = restBetweenRounds;
+                timerInterval( () => {
+                  // The amount of time passed increments by one
+                  timePassed = timePassed += 1;
+                  timeLeft = exercises[j].time - timePassed;
+    
+                  // The time left label is updated
+                  document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
+    
+                  setCircleDasharray();
+                  setRemainingPathColor( timeLeft );
+                  if(timeLeft==0) {
+                    rest = false;
+                    onTimesUp();
+                  }
+                })
+              } else {
+                // End current exercise without any rest
+                onTimesUp();
+              }
+            }
+          }, 1000 );
+        } else {
+          clearInterval( timerInterval );
+          isPaused = true;
+        }
+      }
+    }
+  }
 
 
 
@@ -165,7 +277,8 @@ export default function Timer() {
   }
 
   let setRemainingPathColor = ( timeLeft ) => {
-    const { alert, warning, info } = COLOR_CODES;
+    // Add a color for rest and cooldown. Maybe change background color
+    const { alert, warning, info, rest, cooldown } = COLOR_CODES;
     // If the remaining time is less than or equal to 1/4 time, remove the "warning" class and apply the "alert" class.
     if ( timeLeft <= alert.threshold ) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( warning.color );

@@ -15,11 +15,11 @@ class Navigation extends Component {
           <Link className="my-nav" to="/timer">
             <NavItem>Quick Start/Timer</NavItem>
           </Link>
-          <Link className="my-nav" to="/savedRoutines">
-            <NavItem>Saved Routines</NavItem>
+          <Link className="my-nav" to="/savedWorkouts">
+            <NavItem>Saved Workouts</NavItem>
           </Link>
-          <Link className="my-nav" to="/createRoutines">
-            <NavItem>Create Routines</NavItem>
+          <Link className="my-nav" to="/createWorkouts">
+            <NavItem>Create Workouts</NavItem>
           </Link>
           {/* Make Hamburger nav that is hidden */}
         {/* </ul> */}

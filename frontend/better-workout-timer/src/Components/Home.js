@@ -14,13 +14,13 @@ render() {
             </Link>
           </li>
           <li>
-            <Link to="/savedRoutines">
-              <button className="home-button saved-routines-btn">Saved Routines</button>
+            <Link to="/savedWorkouts">
+              <button className="home-button saved-routines-btn">Saved Workouts</button>
             </Link>
           </li>
           <li>
-            <Link to="/createRoutine">
-              <button className="home-button create-routines-btn">Create Routines</button>
+            <Link to="/createWorkouts">
+              <button className="home-button create-routines-btn">Create Workouts</button>
             </Link>
           </li>
         </ul>

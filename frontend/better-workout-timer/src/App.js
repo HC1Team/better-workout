@@ -4,8 +4,8 @@ import './Components/Styles/App.css';
 
 import Home from './Components/Home';
 import Timer from './Components/Timer';
-import SavedRoutines from './Components/SavedRoutines';
-import CreateRoutines from './Components/CreateRoutines';
+import SavedWorkouts from './Components/SavedWorkouts';
+import CreateWorkouts from './Components/CreateWorkouts';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navigation from './Components/Nav';
 
@@ -19,30 +19,10 @@ class App extends Component {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/timer" component={Timer} />
-            <Route path="/savedRoutines" component={SavedRoutines} />
-            <Route path="/createRoutines" component={CreateRoutines} />
+            <Route path="/savedRoutines" component={SavedWorkouts} />
+            <Route path="/createRoutines" component={CreateWorkouts} />
           </Switch>
         </div>
-
-
-
-
-
-        {/* 
-              How to make calls to server
-              <p>{this.state.response}</p>
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>Post to Server:</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
-          />
-          <button type="submit">Submit</button>
-        </form>
-        <p>{this.state.responseToPost}</p> */}
       </Router>
 
 
