@@ -35,15 +35,15 @@ export default function Timer() {
   var workout = {
     "RoutineName": "Routine 1",
     "NumberOfRounds": 3,
-    "PrepareTime": 20,
-    "CooldownTime": 20,
-    "RestBetweenRounds": 30,
+    "PrepareTime": 5, //Add prepareTime case to startWorkout function
+    "CooldownTime": 5,
+    "RestBetweenRounds": 10,
     "Exercises": [
-      {"name": "pushups", "time": 30, "restAfter": 10},
-      {"name": "plank", "time": 45, "restAfter": 10},
-      {"name": "plank up downs", "time": 45, "restAfter": 10},
-      {"name": "burpees", "time": 60, "restAfter": 15},
-      {"name": "jump rope", "time": 60, "restAfter": 10}
+      {"name": "pushups", "time": 10, "restAfter": 5},
+      {"name": "plank", "time": 10, "restAfter": 5},
+      {"name": "plank up downs", "time": 10, "restAfter": 5},
+      {"name": "burpees", "time": 10, "restAfter": 5},
+      {"name": "jump rope", "time": 10, "restAfter": 5}
     ]
   };
 
@@ -92,21 +92,6 @@ export default function Timer() {
     timerInterval = 0;
   }
 
-  //Make this block of code a separate function that you can run in startWorkout to make the timer move
-  // // The amount of time passed increments by one
-  // timePassed = timePassed += 1;
-  // timeLeft = exercises[j].time - timePassed;
-
-  // // The time left label is updated
-  // document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
-
-  // setCircleDasharray();
-  // setRemainingPathColor( timeLeft );
-  // if(timeLeft==0) {
-  //   rest = false;
-  //   onTimesUp();
-  // }
-
   //Create a startWorkout() function that loops through the appropriate methods for each exercise, rest, rounds, etc.
   let startWorkout = () => {
     //Pull all appropriate data from JSON. 
@@ -135,17 +120,9 @@ export default function Timer() {
         timeLeft = exercises[j].time;
         if ( !isPaused ) {
           timerInterval = setInterval( () => {
-            // The amount of time passed increments by one
-            timePassed = timePassed += 1;
-            timeLeft = exercises[j].time - timePassed;
-    
-            // The time left label is updated
-            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
-    
-            setCircleDasharray();
-            setRemainingPathColor( timeLeft );
-    
-            //Decides whether to move on to next exercise or do restAfter exercise
+            //runTimer(time) runs the timer animation
+            runTimer(exercises[j].time);
+            //Decides whether to move on to next exercise or do restAfter exercise when timeLeft hits 0
             if ( timeLeft === 0 ) {
               // Check if current exercise has rest after it
               if(exercises[j].restAfter!=0) {
@@ -154,15 +131,7 @@ export default function Timer() {
                 timePassed = 0;
                 timeLeft = exercises[j].restAfter;
                 timerInterval = setInterval( () => {
-                  // The amount of time passed increments by one
-                  timePassed = timePassed += 1;
-                  timeLeft = exercises[j].time - timePassed;
-    
-                  // The time left label is updated
-                  document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
-    
-                  setCircleDasharray();
-                  setRemainingPathColor( timeLeft );
+                  runTimer(exercises[j].restAfter);
                   if(timeLeft==0) {
                     rest = false;
                     onTimesUp();
@@ -177,22 +146,14 @@ export default function Timer() {
                 timePassed = 0;
                 timeLeft = restBetweenRounds;
                 timerInterval( () => {
-                  // The amount of time passed increments by one
-                  timePassed = timePassed += 1;
-                  timeLeft = exercises[j].time - timePassed;
-    
-                  // The time left label is updated
-                  document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
-    
-                  setCircleDasharray();
-                  setRemainingPathColor( timeLeft );
+                  runTimer(restBetweenRounds);
                   if(timeLeft==0) {
                     rest = false;
                     onTimesUp();
                   }
                 })
               } else {
-                // End current exercise without any rest
+                // End current exercise/round without any rest
                 onTimesUp();
               }
             }
@@ -202,6 +163,18 @@ export default function Timer() {
           isPaused = true;
         }
       }
+      //Do cooldown time after full workout
+      onTimesUp();
+      if(r==0) {
+        cooldown=true;
+        timerInterval( () => {
+          runTimer(workoutCoolDown);
+          if(timeLeft==0) {
+            onTimesUp();
+          }
+        }, 1000);
+      }
+
     }
   }
 
@@ -229,16 +202,7 @@ export default function Timer() {
   let startTimer = () => {
     if ( !isPaused ) {
       timerInterval = setInterval( () => {
-        // The amount of time passed increments by one
-        timePassed = timePassed += 1;
-        timeLeft = TIME_LIMIT - timePassed;
-
-        // The time left label is updated
-        document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
-
-        setCircleDasharray();
-        setRemainingPathColor( timeLeft );
-
+        runTimer(TIME_LIMIT);
         if ( timeLeft === 0 ) {
           onTimesUp();
         }
@@ -247,6 +211,17 @@ export default function Timer() {
       clearInterval( timerInterval );
       isPaused = true;
     }
+  }
+
+  
+  let runTimer = (time) => {
+    // The amount of time passed increments by one
+    timePassed = timePassed += 1;
+    timeLeft = time - timePassed;
+    // The time left label is updated
+    document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
+    setCircleDasharray();
+    setRemainingPathColor( timeLeft );
   }
 
   let formatTimeLeft = ( time ) => {
@@ -278,7 +253,15 @@ export default function Timer() {
 
   let setRemainingPathColor = ( timeLeft ) => {
     // Add a color for rest and cooldown. Maybe change background color
-    const { alert, warning, info, rest, cooldown } = COLOR_CODES;
+    const { alert, warning, info, rest_, cooldown_ } = COLOR_CODES;
+    // If the boolean rest==true, make the default color rest_.color
+    if(rest) {
+      document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
+      document.getElementById( "base-timer-path-remaining" ).classList.add( rest_.color );
+    } else if(cooldown) { //If boolean cooldown==true, make the default color cooldown_.color
+      document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
+      document.getElementById( "base-timer-path-remaining" ).classList.add( cooldown_.color );
+    }
     // If the remaining time is less than or equal to 1/4 time, remove the "warning" class and apply the "alert" class.
     if ( timeLeft <= alert.threshold ) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( warning.color );
