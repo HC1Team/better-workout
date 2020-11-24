@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './Styles/App.css';
 import './Styles/timer.css'
 import Button from 'react-bootstrap/Button';
@@ -15,14 +15,14 @@ export default function Timer() {
 
   const workout = {
     "RoutineName": "Routine 1",
-    "NumberOfRounds": 3,
+    "NumberOfRounds": 1,
     "PrepareTime": 5, //Add prepareTime case to startWorkout function
     "CooldownTime": 5,
     "RestBetweenRounds": 10,
     "Exercises": [
       { "name": "pushups", "time": 10, "restAfter": 5 },
-      { "name": "plank", "time": 10, "restAfter": 5 },
-      { "name": "plank up downs", "time": 10, "restAfter": 5 },
+      { "name": "plank", "time": 20, "restAfter": 5 },
+      { "name": "plank up downs", "time": 15, "restAfter": 5 },
       { "name": "burpees", "time": 10, "restAfter": 5 },
       { "name": "jump rope", "time": 10, "restAfter": 5 }
     ]
@@ -58,9 +58,9 @@ export default function Timer() {
 
 
   // Warning occurs at whatever half time is for any particular exercise.
-  const WARNING_THRESHOLD = 10;
+  var Warning_Threshold = time/2;
   // Alert occurs at half of the WARNING_THRESHOLD time
-  const ALERT_THRESHOLD = 5;
+  var Alert_Threshold = (time/2)/2; //Maybe there should be an Alert_Threshold for 3 seconds always?
   // stuff to handle the path circle
   const COLOR_CODES = {
     info: {
@@ -68,11 +68,11 @@ export default function Timer() {
     },
     warning: {
       color: "orange",
-      threshold: WARNING_THRESHOLD
+      threshold: Warning_Threshold
     },
     alert: {
       color: "red",
-      threshold: ALERT_THRESHOLD
+      threshold: Alert_Threshold
     },
     rest_: {
       color: "lavender"
@@ -103,6 +103,7 @@ export default function Timer() {
 
   //StartWorkout() function that loops through the appropriate methods for each exercise, rest, rounds, etc.
   async function startWorkout() {
+    document.getElementById("rounds-remaining").innerHTML = round;
     //Runs through each round
     if ( round !=0 ) {
       const result = await waitRound();
@@ -113,6 +114,13 @@ export default function Timer() {
     } else {
       // Workout is complete
       alert( 'Workout complete!' );
+      let done = "DONE";
+      document.getElementById("current-exercise").innerHTML = done;
+      document.getElementById("next-up").innerHTML = done;
+      document.getElementById("rounds-remaining").innerHTML = done;
+      document.getElementById("time-remaining").innerHTML = done;
+      setCircleDasharray();
+      setRemainingPathColor( 0 );
       //Run cooldownTimer if there is a coolDownTime
     }
   }
@@ -134,7 +142,14 @@ export default function Timer() {
       //Runs an exercise
       //Set restAfter value to see if the current exercise has a restAfter
       //Update information for current exercise and nextUp. Also show rep target.
+      Time_Limit = workout.Exercises[result].time;
+      time = Time_Limit;
+      Warning_Threshold = time/2;
+      Alert_Threshold = (time/2)/2;
       await runExercise();
+      // document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
+      remainingPathColor = COLOR_CODES.info.color;
+      
       //Check if the restAfter value is not zero so you can run rest after timer
       // await runRestAfter();
     } else {
@@ -158,39 +173,46 @@ export default function Timer() {
           console.log( 'time' + time );
           //Make timer move every second and update time
           // The time left label is updated
-          // document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
-          // setCircleDasharray();
-          // setRemainingPathColor( time );
-          time--;
-          if ( time === 0 ) {
+          if(time===0) {
+            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
             console.log( 'Exercise done' );
             exercise++; //Move index for next exercise
             clearInterval( timerInterval );
             time = Time_Limit;
+            setCircleDasharray();
+            setRemainingPathColor( time );
+            // Add some delay before moving on to next exercise
             exercises();
+          } else {
+            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
+            setCircleDasharray();
+            setRemainingPathColor( time );
+            time--;
+            document.getElementById("current-exercise").innerHTML = workout.Exercises[exercise].name;
+            document.getElementById("next-up").innerHTML = (exercise+1<numExercises?workout.Exercises[exercise+1].name:"rest");
           }
-        }, 500 );
+        }, 1000 );
       }
-
     } )
   }
 
   //Modify prepare and startTimer to be one function that just starts the workout, as defined above.
   let prepare = () => {
+    document.getElementById("current-exercise").innerHTML = workout.Exercises[0].name;
+    document.getElementById("next-up").innerHTML = (1<numExercises?workout.Exercises[1].name:"rest");
+    document.getElementById("rounds-remaining").innerHTML = workout.NumberOfRounds;
     timerInterval = setInterval( () => {
       prepTimePassed = prepTimePassed += 1;
       prepTimeLeft = PREP_TIME_LEFT - prepTimePassed;
-      if ( prepTime[ prepTimePassed ] === "" ) {
-        document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( Time_Limit );
-      } else {
-        document.getElementById( "time-remaining" ).innerHTML = prepTime[ prepTimePassed ];
-      }
 
-      if ( prepTimeLeft === 0 ) {
+      if ( prepTimeLeft === 1 ) {
         onTimesUp();
+        document.getElementById( "time-remaining" ).innerHTML = prepTime[2];
         // document.getElementById("time-remaining").innerHTML = formatTimeLeft(timeLeft);
         // startTimer();
         startWorkout();
+      } else {
+        document.getElementById( "time-remaining" ).innerHTML = prepTime[ prepTimePassed ];
       }
     }, 1000 );
   }
@@ -261,6 +283,8 @@ export default function Timer() {
       document.getElementById( "base-timer-path-remaining" ).classList.add( cooldown_.color );
     }
     // If the remaining time is less than or equal to 1/4 time, remove the "warning" class and apply the "alert" class.
+    alert.threshold = Alert_Threshold;
+    warning.threshold = Warning_Threshold;
     if ( timeLeft <= alert.threshold ) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( warning.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( alert.color );
@@ -268,6 +292,9 @@ export default function Timer() {
     } else if ( timeLeft <= warning.threshold ) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( warning.color );
+    } else {
+      document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
+      document.getElementById( "base-timer-path-remaining" ).classList.add( info.color );
     }
   }
 
@@ -301,7 +328,7 @@ export default function Timer() {
         <p className="timer-info-item1 timer-info-top-item">Rounds Remaining</p>
         <p className="timer-info-item2 timer-info-top-item">Current Exercise</p>
         <p className="timer-info-item3 timer-info-top-item">Next Up</p>
-        <p className="timer-info-item4 timer-info-bottom-item" id="rounds-remaining">5</p>
+        <p className="timer-info-item4 timer-info-bottom-item" id="rounds-remaining">Pending</p>
         <p className="timer-info-item5 timer-info-bottom-item" id="current-exercise">exercise 1</p>
         <p className="timer-info-item6 timer-info-bottom-item" id="next-up">exercise 2</p>
       </div>
