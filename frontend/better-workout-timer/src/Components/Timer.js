@@ -12,10 +12,10 @@ export default function Timer() {
   // figure out how to get this from the form submit. Database? Cookie? Session?
   // Pass along some kind of JSON object that describes the workout details. Number of rounds, array of exercises with their times, etc. (An Example of this JSON file can be seen in the Resources folder.)
 
-
+  // Use this example workout to test out your startWorkout Function
   const workout = {
     "RoutineName": "Routine 1",
-    "NumberOfRounds": 1,
+    "NumberOfRounds": 2,
     "PrepareTime": 5, //Add prepareTime case to startWorkout function
     "CooldownTime": 5,
     "RestBetweenRounds": 10,
@@ -40,7 +40,7 @@ export default function Timer() {
   // let prepTime = PREP_TIME_LEFT;
   // let cooldownTimeLeft = COOLDOWN_TIME_LEFT;
   var timerInterval = 0;
-  // var restBetweenRounds = workout.RestBetweenRounds;
+  var restBetweenRounds = workout.RestBetweenRounds;
   // var workoutCoolDown = workout.CooldownTime;
   // var exercises = workout.Exercises;
   var exercise = 0; //Keeps track of the current exercise we are on
@@ -50,11 +50,7 @@ export default function Timer() {
   var isPaused = false;
   var rest = false;
   var cooldown = false;
-  // let timerInterval2 = null;
-  // let startTime = `0:${TIME_LIMIT}`;
   let prepTime = [ "Ready", "Set", "Go!", "" ];
-  // Use this example workout to test out your startWorkout Function
-
 
 
   // Warning occurs at whatever half time is for any particular exercise.
@@ -108,9 +104,13 @@ export default function Timer() {
     if ( round !=0 ) {
       const result = await waitRound();
       console.log( 'round' + result );
+      if(rest===true){
+        await restAfterRound();
+        rest = false;
+      }
       await exercises();
       //Run timer for restAfterRound if there is a rest after each round
-      // await restAfterRound();
+      // await waitRound();
     } else {
       // Workout is complete
       alert( 'Workout complete!' );
@@ -125,6 +125,38 @@ export default function Timer() {
     }
   }
 
+
+  function restAfterRound() {
+    return new Promise( resolve => {
+      if ( !isPaused ) {
+        // remainingPathColor = COLOR_CODES.rest_.color;
+        timerInterval = setInterval( () => {
+          console.log( 'rest' + restBetweenRounds );
+          //Make timer move every second and update time
+          // The time left label is updated
+          if(restBetweenRounds===0) {
+            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( restBetweenRounds );
+            console.log( 'Rest Done' );
+            // exercise++; //Move index for next exercise
+            clearInterval( timerInterval );
+            restBetweenRounds = workout.RestBetweenRounds;
+            // rest = false;
+            setCircleDasharray();
+            setRemainingPathColor( restBetweenRounds );
+            // Add some delay before moving on to next exercise
+            exercises();
+          } else {
+            restBetweenRounds--;
+            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( restBetweenRounds );
+            setCircleDasharray2();
+            setRemainingPathColor( restBetweenRounds );
+            document.getElementById("current-exercise").innerHTML = "REST";
+            document.getElementById("next-up").innerHTML = workout.Exercises[0].name;
+          }
+        }, 1000 );
+      }
+    } )
+  }
   //makes sure that startWorkout doesn't run wild
   function waitRound() {
     return new Promise( resolve => {
@@ -155,6 +187,7 @@ export default function Timer() {
     } else {
       round--;
       exercise = 0;
+      rest = true;
       startWorkout();
     }
   }
@@ -270,16 +303,28 @@ export default function Timer() {
     ).toFixed( 0 )} 283`;
     document.getElementById( "base-timer-path-remaining" ).setAttribute( "stroke-dasharray", circleDasharray );
   }
+  let calculateTimeFraction2 = () => {
+    const rawTimeFraction = restAfterRound / workout.RestBetweenRounds;
+    return rawTimeFraction - ( 1 / workout.RestBetweenRounds ) * ( 1 - rawTimeFraction );
+  }
+
+  // Update the dasharray calue as time passes, starting with 283
+  let setCircleDasharray2 = () => {
+    const circleDasharray = `${(
+      calculateTimeFraction2() * FULL_DASH_ARRAY
+    ).toFixed( 0 )} 283`;
+    document.getElementById( "base-timer-path-remaining" ).setAttribute( "stroke-dasharray", circleDasharray );
+  }
 
   let setRemainingPathColor = ( timeLeft ) => {
     // Add a color for rest and cooldown. Maybe change background color
     const { alert, warning, info, rest_, cooldown_ } = COLOR_CODES;
     // If the boolean rest==true, make the default color rest_.color
-    if ( rest ) {
-      document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
+    if ( rest===true ) {
+      document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( rest_.color );
     } else if ( cooldown ) { //If boolean cooldown==true, make the default color cooldown_.color
-      document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
+      document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( cooldown_.color );
     }
     // If the remaining time is less than or equal to 1/4 time, remove the "warning" class and apply the "alert" class.
@@ -292,9 +337,12 @@ export default function Timer() {
     } else if ( timeLeft <= warning.threshold ) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( warning.color );
-    } else {
+    } else if(rest===false) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( info.color );
+    } else {
+      document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
+      document.getElementById( "base-timer-path-remaining" ).classList.add( rest_.color );
     }
   }
 
