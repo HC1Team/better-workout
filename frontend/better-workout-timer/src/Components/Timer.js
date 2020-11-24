@@ -11,20 +11,42 @@ export default function Timer() {
   // start with an initial value of 120 seconds
   // figure out how to get this from the form submit. Database? Cookie? Session?
   // Pass along some kind of JSON object that describes the workout details. Number of rounds, array of exercises with their times, etc. (An Example of this JSON file can be seen in the Resources folder.)
-  const TIME_LIMIT = 20;
+
+
+  const workout = {
+    "RoutineName": "Routine 1",
+    "NumberOfRounds": 3,
+    "PrepareTime": 5, //Add prepareTime case to startWorkout function
+    "CooldownTime": 5,
+    "RestBetweenRounds": 10,
+    "Exercises": [
+      { "name": "pushups", "time": 10, "restAfter": 5 },
+      { "name": "plank", "time": 10, "restAfter": 5 },
+      { "name": "plank up downs", "time": 10, "restAfter": 5 },
+      { "name": "burpees", "time": 10, "restAfter": 5 },
+      { "name": "jump rope", "time": 10, "restAfter": 5 }
+    ]
+  };
+
+  var Time_Limit = workout.Exercises[ 0 ].time;
   const PREP_TIME_LEFT = 3;
-  const COOLDOWN_TIME_LEFT = 20;
+  var prepTimeLeft = PREP_TIME_LEFT;
+  var prepTimePassed = 0;
+  // const COOLDOWN_TIME_LEFT = workout.CooldownTime;
   const FULL_DASH_ARRAY = 283;
-
-
-  // Initially, no time has passed, but this will count up and subtract from the TIME_LEFT
-  let timePassed = 0;
-  let prepTimePassed = 0;
-  let cooldownTimePassed = 0;
-  let timeLeft = TIME_LIMIT
-  let prepTimeLeft = PREP_TIME_LEFT;
-  let cooldownTimeLeft = COOLDOWN_TIME_LEFT;
+  //Tracks the time per each exercise. Initially is the first exercise. Maybe it should be PrepTime instead...?
+  // var time = (workout.PrepareTime!==0?workout.PrepareTime:Time_Limit);
+  var time = Time_Limit;
+  // let prepTime = PREP_TIME_LEFT;
+  // let cooldownTimeLeft = COOLDOWN_TIME_LEFT;
   var timerInterval = 0;
+  // var restBetweenRounds = workout.RestBetweenRounds;
+  // var workoutCoolDown = workout.CooldownTime;
+  // var exercises = workout.Exercises;
+  var exercise = 0; //Keeps track of the current exercise we are on
+  //Variable that will count down number of rounds
+  var numExercises = workout.Exercises.length;
+  var round = workout.NumberOfRounds;
   var isPaused = false;
   var rest = false;
   var cooldown = false;
@@ -32,20 +54,7 @@ export default function Timer() {
   // let startTime = `0:${TIME_LIMIT}`;
   let prepTime = [ "Ready", "Set", "Go!", "" ];
   // Use this example workout to test out your startWorkout Function
-  var workout = {
-    "RoutineName": "Routine 1",
-    "NumberOfRounds": 3,
-    "PrepareTime": 5, //Add prepareTime case to startWorkout function
-    "CooldownTime": 5,
-    "RestBetweenRounds": 10,
-    "Exercises": [
-      {"name": "pushups", "time": 10, "restAfter": 5},
-      {"name": "plank", "time": 10, "restAfter": 5},
-      {"name": "plank up downs", "time": 10, "restAfter": 5},
-      {"name": "burpees", "time": 10, "restAfter": 5},
-      {"name": "jump rope", "time": 10, "restAfter": 5}
-    ]
-  };
+
 
 
   // Warning occurs at whatever half time is for any particular exercise.
@@ -65,10 +74,10 @@ export default function Timer() {
       color: "red",
       threshold: ALERT_THRESHOLD
     },
-    rest: {
+    rest_: {
       color: "lavender"
     },
-    cooldown: {
+    cooldown_: {
       color: "cornflowerblue"
     }
   };
@@ -80,11 +89,11 @@ export default function Timer() {
     // prepare();
     prepare();
     // Ok, so you can access the stuff from the JSON pretty easy. Now just apply it to a function for the timer. Set some mutable variables that are based of the times and get cracking.
-    console.log(workout.Exercises[0].name);
+    // console.log(workout.Exercises[0].name);
     return () => {
       onTimesUp();
     }
-  }, [] );
+  } );
 
 
   let onTimesUp = () => {
@@ -92,93 +101,79 @@ export default function Timer() {
     timerInterval = 0;
   }
 
-  //Create a startWorkout() function that loops through the appropriate methods for each exercise, rest, rounds, etc.
-  let startWorkout = () => {
-    //Pull all appropriate data from JSON. 
-    //May not have to assign separate variables here and just use JSON for all loop related stuff.
-    var rounds = workout.NumberOfRounds;
-    var restBetweenRounds = workout.RestBetweenRounds;
-    var workoutCoolDown = workout.CooldownTime;
-    var exercises = workout.Exercises;
-
-    // Two for loops
-    //Loop ONE: Loop through all the rounds
-    for(var i=0, r=rounds; i<rounds; i++, r--) {
-      //Display correct number of rounds
-      document.getElementById("rounds-remaining").innerHTML = r;
-      //Loop TWO: Loop through each exercise. Run the startTimer with correct information for each workout being displayed in timer.
-      for(var j=0; i<exercises.length; j++) {
-        // Display correct workout names
-        if(i<exercises.length-1){
-          document.getElementById("current-exercise").innerHTML = exercises[j].name;
-          document.getElementById("next-up").innerHTML = exercises[j+1].name;
-        } else {
-          document.getElementById("current-exercise").innerHTML = exercises[j].name;
-          document.getElementById("next-up").innerHTML = "rest";
-        }
-        //Start timer for current exercise
-        timeLeft = exercises[j].time;
-        if ( !isPaused ) {
-          timerInterval = setInterval( () => {
-            //runTimer(time) runs the timer animation
-            runTimer(exercises[j].time);
-            //Decides whether to move on to next exercise or do restAfter exercise when timeLeft hits 0
-            if ( timeLeft === 0 ) {
-              // Check if current exercise has rest after it
-              if(exercises[j].restAfter!=0) {
-                onTimesUp();
-                rest = true;
-                timePassed = 0;
-                timeLeft = exercises[j].restAfter;
-                timerInterval = setInterval( () => {
-                  runTimer(exercises[j].restAfter);
-                  if(timeLeft==0) {
-                    rest = false;
-                    onTimesUp();
-                  }
-                }, 1000);
-              } else if(j==exercises.length-1 && workout.RestBetweenRounds!=0){
-                //Run the rest timer and change current exercise and nextup labels
-                document.getElementById("current-exercise").innerHTML = "rest";
-                document.getElementById("next-up").innerHTML = exercises[0].name;
-                onTimesUp();
-                rest = true;
-                timePassed = 0;
-                timeLeft = restBetweenRounds;
-                timerInterval( () => {
-                  runTimer(restBetweenRounds);
-                  if(timeLeft==0) {
-                    rest = false;
-                    onTimesUp();
-                  }
-                })
-              } else {
-                // End current exercise/round without any rest
-                onTimesUp();
-              }
-            }
-          }, 1000 );
-        } else {
-          clearInterval( timerInterval );
-          isPaused = true;
-        }
-      }
-      //Do cooldown time after full workout
-      onTimesUp();
-      if(r==0) {
-        cooldown=true;
-        timerInterval( () => {
-          runTimer(workoutCoolDown);
-          if(timeLeft==0) {
-            onTimesUp();
-          }
-        }, 1000);
-      }
-
+  //StartWorkout() function that loops through the appropriate methods for each exercise, rest, rounds, etc.
+  async function startWorkout() {
+    //Runs through each round
+    if ( round !=0 ) {
+      const result = await waitRound();
+      console.log( 'round' + result );
+      await exercises();
+      //Run timer for restAfterRound if there is a rest after each round
+      // await restAfterRound();
+    } else {
+      // Workout is complete
+      alert( 'Workout complete!' );
+      //Run cooldownTimer if there is a coolDownTime
     }
   }
 
+  //makes sure that startWorkout doesn't run wild
+  function waitRound() {
+    return new Promise( resolve => {
+      resolve( round );
+    } );
+  }
 
+  //Runs through all the exercises
+  async function exercises() {
+    //Runs through each exercise within a round
+    console.log( 'Starting exercises.' );
+    if ( exercise < numExercises ) {
+      const result = await waitExercise();
+      console.log( 'exercise' + result );
+      //Runs an exercise
+      //Set restAfter value to see if the current exercise has a restAfter
+      //Update information for current exercise and nextUp. Also show rep target.
+      await runExercise();
+      //Check if the restAfter value is not zero so you can run rest after timer
+      // await runRestAfter();
+    } else {
+      round--;
+      exercise = 0;
+      startWorkout();
+    }
+  }
+
+  //Makes sure exercises doesn't run wild
+  function waitExercise() {
+    return new Promise( resolve => {
+      resolve( exercise );
+    } );
+  }
+
+  function runExercise() {
+    return new Promise( resolve => {
+      if ( !isPaused ) {
+        timerInterval = setInterval( () => {
+          console.log( 'time' + time );
+          //Make timer move every second and update time
+          // The time left label is updated
+          // document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
+          // setCircleDasharray();
+          // setRemainingPathColor( time );
+          time--;
+          if ( time === 0 ) {
+            console.log( 'Exercise done' );
+            exercise++; //Move index for next exercise
+            clearInterval( timerInterval );
+            time = Time_Limit;
+            exercises();
+          }
+        }, 500 );
+      }
+
+    } )
+  }
 
   //Modify prepare and startTimer to be one function that just starts the workout, as defined above.
   let prepare = () => {
@@ -186,7 +181,7 @@ export default function Timer() {
       prepTimePassed = prepTimePassed += 1;
       prepTimeLeft = PREP_TIME_LEFT - prepTimePassed;
       if ( prepTime[ prepTimePassed ] === "" ) {
-        document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( TIME_LIMIT );
+        document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( Time_Limit );
       } else {
         document.getElementById( "time-remaining" ).innerHTML = prepTime[ prepTimePassed ];
       }
@@ -194,41 +189,44 @@ export default function Timer() {
       if ( prepTimeLeft === 0 ) {
         onTimesUp();
         // document.getElementById("time-remaining").innerHTML = formatTimeLeft(timeLeft);
-        startTimer();
+        // startTimer();
+        startWorkout();
       }
     }, 1000 );
   }
 
-  let startTimer = () => {
-    if ( !isPaused ) {
-      timerInterval = setInterval( () => {
-        runTimer(TIME_LIMIT);
-        if ( timeLeft === 0 ) {
-          onTimesUp();
-        }
-      }, 1000 );
-    } else {
-      clearInterval( timerInterval );
-      isPaused = true;
-    }
-  }
+  //Old functio that tested running the timer
+  // let startTimer = () => {
+  //   if ( !isPaused ) {
+  //     timerInterval = setInterval( () => {
+  //       runTimer( Time_Limit );
+  //       if ( time === 0 ) {
+  //         onTimesUp();
+  //       }
+  //     }, 1000 );
+  //   } else {
+  //     clearInterval( timerInterval );
+  //     isPaused = true;
+  //   }
+  // }
 
-  
-  let runTimer = (time) => {
-    // The amount of time passed increments by one
-    timePassed = timePassed += 1;
-    timeLeft = time - timePassed;
-    // The time left label is updated
-    document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( timeLeft );
-    setCircleDasharray();
-    setRemainingPathColor( timeLeft );
-  }
+  //Old function that displayed right information for timer
+  // let runTimer = ( time_ ) => {
+  //   // The amount of time passed increments by one
+  //   timePassed = timePassed += 1;
+  //   timeLeft = time_ - timePassed;
+  //   // The time left label is updated
+  //   document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
+  //   setCircleDasharray();
+  //   setRemainingPathColor( time );
+  // }
 
-  let formatTimeLeft = ( time ) => {
+  //Formats time in correct format
+  let formatTimeLeft = ( time_ ) => {
     // The largest round integer less than or equal to the result of time divided being by 60.
-    const minutes = Math.floor( time / 60 );
+    const minutes = Math.floor( time_ / 60 );
     // Seconds are the remainder of the time divided by 60 (modulus operator)
-    let seconds = time % 60;
+    let seconds = time_ % 60;
     // If the value of seconds is less than 10, then display seconds with a leading zero
     if ( seconds < 10 ) {
       seconds = `0${seconds}`;
@@ -239,8 +237,8 @@ export default function Timer() {
 
   // divides time left by the defined time limit.
   let calculateTimeFraction = () => {
-    const rawTimeFraction = timeLeft / TIME_LIMIT;
-    return rawTimeFraction - ( 1 / TIME_LIMIT ) * ( 1 - rawTimeFraction );
+    const rawTimeFraction = time / Time_Limit;
+    return rawTimeFraction - ( 1 / Time_Limit ) * ( 1 - rawTimeFraction );
   }
 
   // Update the dasharray calue as time passes, starting with 283
@@ -255,10 +253,10 @@ export default function Timer() {
     // Add a color for rest and cooldown. Maybe change background color
     const { alert, warning, info, rest_, cooldown_ } = COLOR_CODES;
     // If the boolean rest==true, make the default color rest_.color
-    if(rest) {
+    if ( rest ) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( rest_.color );
-    } else if(cooldown) { //If boolean cooldown==true, make the default color cooldown_.color
+    } else if ( cooldown ) { //If boolean cooldown==true, make the default color cooldown_.color
       document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( cooldown_.color );
     }
@@ -287,7 +285,7 @@ export default function Timer() {
     // Set flag for isPaused to false
     isPaused = false;
     // startTimer again
-    startTimer();
+    startWorkout();
     document.getElementById( "play" ).style.display = "none";
     document.getElementById( "pause" ).style.display = "inline-block";
   }
@@ -303,9 +301,9 @@ export default function Timer() {
         <p className="timer-info-item1 timer-info-top-item">Rounds Remaining</p>
         <p className="timer-info-item2 timer-info-top-item">Current Exercise</p>
         <p className="timer-info-item3 timer-info-top-item">Next Up</p>
-        <p className="timer-info-item4 timer-info-bottom-item" id="rounds-remaining">3</p>
-        <p className="timer-info-item5 timer-info-bottom-item" id="current-exercise">push-ups</p>
-        <p className="timer-info-item6 timer-info-bottom-item" id="next-up">jumping jacks</p>
+        <p className="timer-info-item4 timer-info-bottom-item" id="rounds-remaining">5</p>
+        <p className="timer-info-item5 timer-info-bottom-item" id="current-exercise">exercise 1</p>
+        <p className="timer-info-item6 timer-info-bottom-item" id="next-up">exercise 2</p>
       </div>
 
       <div className="base-timer">
@@ -327,7 +325,7 @@ export default function Timer() {
         </svg>
         <div>
           <span className="base-timer__label" id="time-remaining">
-            { formatTimeLeft( timeLeft ) }
+            { formatTimeLeft( time ) }
           </span>
         </div>
       </div>
