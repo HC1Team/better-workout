@@ -21,8 +21,8 @@ export default function Timer() {
     "CooldownTime": 5,
     "RestBetweenRounds": 10,
     "Exercises": [
-      { "name": "pushups", "time": 10, "restAfter": 5 }
-      // { "name": "plank", "time": 20, "restAfter": 5 },
+      { "name": "pushups", "time": 10, "restAfter": 5 },
+      { "name": "plank", "time": 20, "restAfter": 5 },
       // { "name": "plank up downs", "time": 15, "restAfter": 5 },
       // { "name": "burpees", "time": 10, "restAfter": 5 },
       // { "name": "jump rope", "time": 10, "restAfter": 5 }
@@ -226,22 +226,28 @@ export default function Timer() {
           //Make timer move every second and update time
           // The time left label is updated
           if(time===0) {
-            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
-            console.log( 'Exercise done' );
-            exercise++; //Move index for next exercise
-            clearInterval( timerInterval );
-            time = Time_Limit;
-            setCircleDasharray();
-            setRemainingPathColor( time );
-            // Add some delay before moving on to next exercise
-            exercises();
+            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( 0 );
+            //Check if current exercise has rest after it. Set boolean rest to true and add new conditional for rest time. Reset time to be time for rest. 
+            if(workout.Exercises[exercise].restAfter!==0 && rest!==true) {
+              rest = true;
+              time = workout.Exercises[exercise].restAfter;
+            } else{
+              document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
+              console.log( 'Exercise done' );
+              rest = false;
+              exercise++; //Move index for next exercise
+              clearInterval( timerInterval );
+              time = Time_Limit;
+              setCircleDasharray();
+              setRemainingPathColor( time );
+              // Add some delay before moving on to next exercise
+              exercises();
+            }
+          } else if(rest===true){
+            runTimer("REST", ((exercise+1<numExercises) && (workout.RestBetweenRounds==0)?workout.Exercises[0].name:"REST"));
           } else {
-            document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
-            setCircleDasharray();
-            setRemainingPathColor( time );
-            time--;
-            document.getElementById("current-exercise").innerHTML = workout.Exercises[exercise].name;
-            document.getElementById("next-up").innerHTML = (exercise+1<numExercises?workout.Exercises[exercise+1].name:"rest");
+
+            runTimer(workout.Exercises[exercise].name, (exercise+1<numExercises?workout.Exercises[exercise+1].name:"REST"));
           }
         }, 1000 );
       }
@@ -251,7 +257,7 @@ export default function Timer() {
   //Modify prepare and startTimer to be one function that just starts the workout, as defined above.
   let prepare = () => {
     document.getElementById("current-exercise").innerHTML = workout.Exercises[0].name;
-    document.getElementById("next-up").innerHTML = (1<numExercises?workout.Exercises[1].name:"rest");
+    document.getElementById("next-up").innerHTML = (1<numExercises?workout.Exercises[1].name:"REST");
     document.getElementById("rounds-remaining").innerHTML = workout.NumberOfRounds;
     timerInterval = setInterval( () => {
       prepTimePassed = prepTimePassed += 1;
@@ -269,7 +275,7 @@ export default function Timer() {
     }, 1000 );
   }
 
-  //Old functio that tested running the timer
+  //Old function that tested running the timer
   // let startTimer = () => {
   //   if ( !isPaused ) {
   //     timerInterval = setInterval( () => {
@@ -284,16 +290,19 @@ export default function Timer() {
   //   }
   // }
 
-  //Old function that displayed right information for timer
-  // let runTimer = ( time_ ) => {
-  //   // The amount of time passed increments by one
-  //   timePassed = timePassed += 1;
-  //   timeLeft = time_ - timePassed;
-  //   // The time left label is updated
-  //   document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
-  //   setCircleDasharray();
-  //   setRemainingPathColor( time );
-  // }
+
+  //To update, there needs to be a "time" argument, "currentExercise" argument, and "nextUp" argument
+  function runTimer(currentExercise, nextUp) {
+    // The time left label is updated
+    document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
+    setCircleDasharray();
+    setRemainingPathColor( time );
+    time--;
+    //Displays the current thing happening
+    document.getElementById("current-exercise").innerHTML = currentExercise;
+    //Displays the next activity
+    document.getElementById("next-up").innerHTML = nextUp;
+  }
 
   //Formats time in correct format
   let formatTimeLeft = ( time_ ) => {
