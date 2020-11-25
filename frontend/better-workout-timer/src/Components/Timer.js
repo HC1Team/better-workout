@@ -14,11 +14,12 @@ export default function Timer() {
   // Pass along some kind of JSON object that describes the workout details. Number of rounds, array of exercises with their times, etc. (An Example of this JSON file can be seen in the Resources folder.)
 
   // Use this example workout to test out your startWorkout Function
+  //The actual response will be pretty simple. Rest after workout will be static and the same for each workout, no prep time other than current function, no cooldown time, workout just ends.
   const workout = {
     "RoutineName": "Routine 1",
     "NumberOfRounds": 1,
-    "PrepareTime": 5, //Add prepareTime case to startWorkout function
-    "CooldownTime": 5,
+    "PrepareTime": 5, //Won't be using
+    "CooldownTime": 5, //Won't be using
     "RestBetweenRounds": 10,
     "Exercises": [
       { "name": "pushups", "time": 10, "restAfter": 5 },
