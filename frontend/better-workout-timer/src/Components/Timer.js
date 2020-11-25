@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Styles/App.css';
 import './Styles/timer.css'
 import Button from 'react-bootstrap/Button';
-import { FaPause, FaPlay } from 'react-icons/fa';
+import { FaPause, FaPlay, FaStop } from 'react-icons/fa';
+import {Prompt, Redirect, useHistory, Link} from 'react-router-dom';
 
 
 
@@ -15,18 +16,20 @@ export default function Timer() {
   // Use this example workout to test out your startWorkout Function
   const workout = {
     "RoutineName": "Routine 1",
-    "NumberOfRounds": 2,
+    "NumberOfRounds": 1,
     "PrepareTime": 5, //Add prepareTime case to startWorkout function
     "CooldownTime": 5,
     "RestBetweenRounds": 10,
     "Exercises": [
-      { "name": "pushups", "time": 10, "restAfter": 5 },
-      { "name": "plank", "time": 20, "restAfter": 5 },
-      { "name": "plank up downs", "time": 15, "restAfter": 5 },
-      { "name": "burpees", "time": 10, "restAfter": 5 },
-      { "name": "jump rope", "time": 10, "restAfter": 5 }
+      { "name": "pushups", "time": 10, "restAfter": 5 }
+      // { "name": "plank", "time": 20, "restAfter": 5 },
+      // { "name": "plank up downs", "time": 15, "restAfter": 5 },
+      // { "name": "burpees", "time": 10, "restAfter": 5 },
+      // { "name": "jump rope", "time": 10, "restAfter": 5 }
     ]
   };
+
+  const history = useHistory();
 
   var Time_Limit = workout.Exercises[ 0 ].time;
   const PREP_TIME_LEFT = 3;
@@ -48,9 +51,11 @@ export default function Timer() {
   var numExercises = workout.Exercises.length;
   var round = workout.NumberOfRounds;
   var isPaused = false;
+  var wasPaused = false;
   var rest = false;
   var cooldown = false;
   let prepTime = [ "Ready", "Set", "Go!", "" ];
+  const [timerIsRunning, setTimerIsRunning] = useState(true);
 
 
   // Warning occurs at whatever half time is for any particular exercise.
@@ -79,6 +84,8 @@ export default function Timer() {
   };
   let remainingPathColor = COLOR_CODES.info.color;
 
+  const [noChange, setNoChange] = useState(true);
+
   useEffect( () => {
     // document.getElementById("time-remaining").innerHTML = "Ready";
     document.getElementById( "time-remaining" ).innerHTML = prepTime[ 0 ];
@@ -89,7 +96,7 @@ export default function Timer() {
     return () => {
       onTimesUp();
     }
-  } );
+  },[noChange] );
 
 
   let onTimesUp = () => {
@@ -101,7 +108,7 @@ export default function Timer() {
   async function startWorkout() {
     document.getElementById("rounds-remaining").innerHTML = round;
     //Runs through each round
-    if ( round !=0 ) {
+    if ( round !==0 ) {
       const result = await waitRound();
       console.log( 'round' + result );
       if(rest===true){
@@ -122,6 +129,8 @@ export default function Timer() {
       setCircleDasharray();
       setRemainingPathColor( 0 );
       //Run cooldownTimer if there is a coolDownTime
+      setTimerIsRunning(false);
+      console.log(timerIsRunning);
     }
   }
 
@@ -174,10 +183,20 @@ export default function Timer() {
       //Runs an exercise
       //Set restAfter value to see if the current exercise has a restAfter
       //Update information for current exercise and nextUp. Also show rep target.
-      Time_Limit = workout.Exercises[result].time;
-      time = Time_Limit;
-      Warning_Threshold = time/2;
-      Alert_Threshold = (time/2)/2;
+      if(wasPaused) {
+        // Time_Limit = workout.Exercises[result].time;
+        Time_Limit = workout.Exercises[result].time;
+        wasPaused = false;
+        console.log(time);
+      } else {
+        Time_Limit = workout.Exercises[result].time;
+        time = Time_Limit;
+        Warning_Threshold = time/2;
+        Alert_Threshold = (time/2)/2;
+      }
+      
+
+
       await runExercise();
       // document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
       remainingPathColor = COLOR_CODES.info.color;
@@ -320,13 +339,13 @@ export default function Timer() {
     // Add a color for rest and cooldown. Maybe change background color
     const { alert, warning, info, rest_, cooldown_ } = COLOR_CODES;
     // If the boolean rest==true, make the default color rest_.color
-    if ( rest===true ) {
-      document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
-      document.getElementById( "base-timer-path-remaining" ).classList.add( rest_.color );
-    } else if ( cooldown ) { //If boolean cooldown==true, make the default color cooldown_.color
-      document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
-      document.getElementById( "base-timer-path-remaining" ).classList.add( cooldown_.color );
-    }
+    // if ( rest===true ) {
+    //   document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
+    //   document.getElementById( "base-timer-path-remaining" ).classList.add( rest_.color );
+    // } else if ( cooldown ) { //If boolean cooldown==true, make the default color cooldown_.color
+    //   document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
+    //   document.getElementById( "base-timer-path-remaining" ).classList.add( cooldown_.color );
+    // }
     // If the remaining time is less than or equal to 1/4 time, remove the "warning" class and apply the "alert" class.
     alert.threshold = Alert_Threshold;
     warning.threshold = Warning_Threshold;
@@ -350,8 +369,10 @@ export default function Timer() {
   let pause = () => {
     // Clear timerInterval
     onTimesUp();
+    console.log(time);
     // Set flag for isPaused to true
     isPaused = true;
+    wasPaused = false;
     document.getElementById( "pause" ).style.display = "none";
     document.getElementById( "play" ).style.display = "inline-block";
   }
@@ -359,12 +380,22 @@ export default function Timer() {
   let start = () => {
     // Set flag for isPaused to false
     isPaused = false;
+    wasPaused = true;
     // startTimer again
     startWorkout();
     document.getElementById( "play" ).style.display = "none";
     document.getElementById( "pause" ).style.display = "inline-block";
   }
 
+  function quit() {
+    onTimesUp();
+    isPaused = true;
+    document.getElementById( "pause" ).style.display = "none";
+    document.getElementById( "play" ).style.display = "inline-block";
+    console.log(timerIsRunning);
+    
+    // return (<><Prompt when={timerIsRunning} message="Your woukout isn't over! Quit workout?"/>{history.push("/")}</>)
+  }
 
   let pathClasses = [ 'base-timer__path-remaining', remainingPathColor ].join( ' ' );
 
@@ -408,6 +439,14 @@ export default function Timer() {
       <div>
         <Button id="pause" className="pause-button" onClick={ function () { pause() } }><FaPause id="pause-icon" className="pause" /></Button>
         <Button id="play" className="play-button" onClick={ function () { start() } }><FaPlay id="play-icon" className="play" /></Button>
+      </div>
+      <div>
+        <Prompt when={timerIsRunning} message="Your woukout isn't over! Quit workout?" />
+        <Link to="/" >
+          <Button id="quit" className="quit-button" onClick={function() {quit()}} >
+          <FaStop id="quit-icon" className="quit" />
+          </Button>
+        </Link>
       </div>
 
     </div>
