@@ -77,6 +77,10 @@
   stroke: red;
 }
 
+.base-timer__path-remaining.lavender {
+  stroke: rgb(178, 178, 228);
+}
+
 .base-timer__svg {
   /* Flips the svg and makes the animation to move left-to-right */
   transform: scaleX(-1);

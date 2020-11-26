@@ -111,9 +111,10 @@ export default function SavedWorkouts() {
       <div className="App">
         <h1>Saved Routines</h1>
         {/* Container for your cards */}
-        <div className="large-container">
+        <div className="large-container column">
           {/* Each card will be mapped out here, but for now you'll just make some temp one's until you have what you need */}
           {sampleWorkouts.map( (w ,idx) => (
+            <>
             <Card 
               key={idx}
               bg="dark"
@@ -124,8 +125,8 @@ export default function SavedWorkouts() {
               >
                 <Card.Title id={w.workoutID} className="workout-title">{w.workoutID}</Card.Title>
                 <ListGroup variant="flush">
-                  {w.exercises.map((e, idx) => (
-                    <ListGroup.Item className="exercise-info-container">
+                  {w.exercises.map((e, idy) => (
+                    <ListGroup.Item key={idy} className="exercise-info-container">
                       <p className="exercise-info-item1 exercise-info-top">Exercise:</p>
                       <p className="exercise-info-item2 exercise-info-top">Muscle Group:</p>
                       <p className="exercise-info-item3 exercise-info-top">Rep Target:</p>
@@ -145,6 +146,8 @@ export default function SavedWorkouts() {
                 </Card.Footer>
               </Card.Body>
             </Card>
+            <br/>
+            </>
           ))}
         </div>
       </div>

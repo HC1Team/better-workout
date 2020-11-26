@@ -79,9 +79,6 @@ export default function Timer(props) {
     },
     rest_: {
       color: "lavender"
-    },
-    cooldown_: {
-      color: "cornflowerblue"
     }
   };
   let remainingPathColor = COLOR_CODES.info.color;
@@ -98,7 +95,7 @@ export default function Timer(props) {
     return () => {
       onTimesUp();
     }
-  },[noChange] );
+  });
 
 
   let onTimesUp = () => {
@@ -151,15 +148,17 @@ export default function Timer(props) {
             // exercise++; //Move index for next exercise
             clearInterval( timerInterval );
             restBetweenRounds = workout.restBetweenRounds;
-            // rest = false;
+            rest = false;
             setCircleDasharray();
             setRemainingPathColor( restBetweenRounds );
             // Add some delay before moving on to next exercise
+            // document.getElementById("base-timer-path-remaining").classList.remove(COLOR_CODES.alert.color);
+            // document.getElementById("base-timer-path-remaining").classList.add(COLOR_CODES.info.color);
             exercises();
           } else {
             restBetweenRounds--;
             document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( restBetweenRounds );
-            setCircleDasharray2();
+            setCircleDasharray();
             setRemainingPathColor( restBetweenRounds );
             document.getElementById("current-exercise").innerHTML = "REST";
             document.getElementById("next-up").innerHTML = workout.exercises[0].exerciseName;
@@ -231,9 +230,11 @@ export default function Timer(props) {
             document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( 0 );
             //Check if current exercise has rest after it. Set boolean rest to true and add new conditional for rest time. Reset time to be time for rest. 
             // Fix rest after for each exercise
-            if(workout.exercises[exercise].restAfter!==0 && rest!==true) {
+            if(workout.restAfterExercise!==0 && rest!==true) {
               rest = true;
-              time = workout.exercises[exercise].restAfter;
+              time = workout.restAfterExercise;
+              Warning_Threshold = time/2;
+              Alert_Threshold = (time/2)/2;
             } else{
               document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
               console.log( 'Exercise done' );
@@ -247,10 +248,10 @@ export default function Timer(props) {
               exercises();
             }
           } else if(rest===true){
-            runTimer("REST", ((exercise+1<numExercises) && (workout.restBetweenRounds==0)?workout.exercises[0].exerciseName:"REST"));
+            runTimer("REST", (exercise+1<numExercises?workout.exercises[exercise+1].exerciseName:"REST"));
           } else {
 
-            runTimer(workout.exercises[exercise].exerciseName, (exercise+1<numExercises?workout.exercises[exercise+1].exerciseName:"REST"));
+            runTimer(workout.exercises[exercise].exerciseName, (exercise+1<numExercises && workout.restAfterExercise===0?workout.exercises[exercise+1].exerciseName:"REST"));
           }
         }, 1000 );
       }
@@ -349,7 +350,7 @@ export default function Timer(props) {
 
   let setRemainingPathColor = ( timeLeft ) => {
     // Add a color for rest and cooldown. Maybe change background color
-    const { alert, warning, info, rest_, cooldown_ } = COLOR_CODES;
+    const { alert, warning, info, rest_ } = COLOR_CODES;
     // If the boolean rest==true, make the default color rest_.color
     // if ( rest===true ) {
     //   document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
@@ -360,13 +361,18 @@ export default function Timer(props) {
     // }
     // If the remaining time is less than or equal to 1/4 time, remove the "warning" class and apply the "alert" class.
     alert.threshold = Alert_Threshold;
-    warning.threshold = Warning_Threshold;
+    warning.threshold = Warning_Threshold; 
     if ( timeLeft <= alert.threshold ) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( warning.color );
       document.getElementById( "base-timer-path-remaining" ).classList.add( alert.color );
       // If the remaining time is less than or equal to half time, remove the base color and apply the "warning" class.
     } else if ( timeLeft <= warning.threshold ) {
-      document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
+      //Find a way to fix when Came After rest for Round
+      if(rest===true) {
+        document.getElementById("base-timer-path-remaining").classList.remove(rest_.color);
+      } else {
+        document.getElementById( "base-timer-path-remaining" ).classList.remove( info.color );
+      }
       document.getElementById( "base-timer-path-remaining" ).classList.add( warning.color );
     } else if(rest===false) {
       document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );

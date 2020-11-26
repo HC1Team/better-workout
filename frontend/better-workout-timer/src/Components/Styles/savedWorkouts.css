@@ -2,13 +2,22 @@
   text-align: center;
   align-content: center;
   display: inline-flex;
+  justify-content: space-between;
+  margin: 0;
+  /* overflow-x: hidden; */
+}
+
+.column {
+  flex-direction: column;
+  height: auto;
 }
 
 .workout-card {
   display: block;
   padding: 5px;
   padding-right: 0px;
-  width: auto;
+  padding-left: 0px;
+  width: 400px;
 }
 
 .workout-title {
