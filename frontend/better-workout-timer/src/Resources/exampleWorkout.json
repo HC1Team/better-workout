@@ -1,0 +1,38 @@
+[
+  { "workoutID": "Workout1",
+    "numberOfRounds": 3,
+    "restBetweenRounds": 30,
+    "restAfterExercise": 10,
+    "exercises":
+      [
+        {"exerciseName":"Pull ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 60},
+        {"exerciseName":"Burpees", "muscleGroup": "Full Body", "repTarget": 10, "time": 60},
+        {"exerciseName":"Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 60},
+        {"exerciseName":"Jump Rope", "muscleGroup": "Full Body", "repTarget": 0, "time": 60}
+      ]
+  },
+  { "workoutID": "Workout2",
+    "numberOfRounds": 3,
+    "restBetweenRounds": 30,
+    "restAfterExercise": 10,
+    "exercises":
+      [
+        {"exerciseName":"Pulsing Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 30},
+        {"exerciseName":"Burpees", "muscleGroup": "Full Body", "repTarget": 10, "time": 60},
+        {"exerciseName":"Supermans", "muscleGroup": "Abs", "repTarget": 0, "time": 60},
+        {"exerciseName":"Pull ups", "muscleGroup": "Upper body", "repTarget": 0, "time": 45}
+      ]
+  },
+  { "workoutID": "Workout3",
+    "numberOfRounds": 3,
+    "restBetweenRounds": 30,
+    "restAfterExercise": 10,
+    "exercises":
+      [
+        {"exerciseName":"Push-Ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30},
+        {"exerciseName":"Burpees", "muscleGroup": "Upper Body", "repTarget": 10, "time": 60},
+        {"exerciseName":"Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 60},
+        {"exerciseName":"Plank", "muscleGroup": "Abs", "repTarget": 0, "time": 45}
+      ]
+  }
+]
