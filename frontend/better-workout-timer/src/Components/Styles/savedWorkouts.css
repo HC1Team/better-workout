@@ -1,0 +1,64 @@
+.large-container {
+  text-align: center;
+  align-content: center;
+  display: inline-flex;
+}
+
+.workout-card {
+  display: inline-flexbox;
+  padding: 5px;
+  padding-right: 0px;
+  width: auto;
+
+}
+
+.workout-title {
+  color: black;
+}
+
+.exercise-info-top {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.exercise-info-bottom {
+  font-size: 3rem;
+  font-style: italic;
+}
+
+.exercise-info-item1 {
+  grid-area: "exercise-name-label";
+}
+.exercise-info-item2 {
+  grid-area: "muscle-group-label";
+}
+.exercise-info-item3 {
+  grid-area:"rep-target-label";
+}
+.exercise-info-item4 {
+  grid-area: "time-label";
+}
+.exercise-info-item5 {
+  grid-area: "exercise-name";
+}
+.exercise-info-item6 {
+  grid-area: "muscle-group";
+}
+.exercise-info-item7 {
+  grid-area:"rep-target";
+}
+.exercise-info-item8 {
+  grid-area: "time";
+}
+
+
+
+.exercise-info-container {
+  display: grid;
+  grid-template-areas: 
+  "exercise-name-label muscle-group-label rep-target-label time-label"
+  "exercise-name muscle-group rep-target time"
+  ;
+  justify-content: center;
+  text-align: center;
+}
