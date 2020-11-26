@@ -7,32 +7,31 @@ import {Prompt, Redirect, useHistory, Link} from 'react-router-dom';
 
 
 
-// Make sure to turn off timer when moving from page to page
-export default function Timer() {
-  // start with an initial value of 120 seconds
-  // figure out how to get this from the form submit. Database? Cookie? Session?
-  // Pass along some kind of JSON object that describes the workout details. Number of rounds, array of exercises with their times, etc. (An Example of this JSON file can be seen in the Resources folder.)
-
+// Make sure to turn off timer when moving from page to page or prevent user from moving from page to page
+export default function Timer(props) {
+  // How do I test that props isn't empty?
+  const [testWorkout, setTestWorkout] = useState(props.location.state.workout);
+  console.log(testWorkout);
   // Use this example workout to test out your startWorkout Function
   //The actual response will be pretty simple. Rest after workout will be static and the same for each workout, no prep time other than current function, no cooldown time, workout just ends.
-  const workout = {
-    "RoutineName": "Routine 1",
-    "NumberOfRounds": 1,
-    "PrepareTime": 5, //Won't be using
-    "CooldownTime": 5, //Won't be using
-    "RestBetweenRounds": 10,
-    "Exercises": [
-      { "name": "pushups", "time": 10, "restAfter": 5 },
-      { "name": "plank", "time": 20, "restAfter": 5 },
-      // { "name": "plank up downs", "time": 15, "restAfter": 5 },
-      // { "name": "burpees", "time": 10, "restAfter": 5 },
-      // { "name": "jump rope", "time": 10, "restAfter": 5 }
-    ]
-  };
+  const workout = testWorkout;
+  console.log(workout);
+  //{
+  //   "workoutID": "Routine 1",
+  //   "numberOfRounds": 1,
+  //   "restBetweenRounds": 10,
+  //   "exercises": [
+  //     { "exerciseName": "pushups", "time": 10, "restAfter": 5 },
+  //     { "exerciseName": "plank", "time": 20, "restAfter": 5 },
+  //     // { "name": "plank up downs", "time": 15, "restAfter": 5 },
+  //     // { "name": "burpees", "time": 10, "restAfter": 5 },
+  //     // { "name": "jump rope", "time": 10, "restAfter": 5 }
+  //   ]
+  // };
 
   const history = useHistory();
 
-  var Time_Limit = workout.Exercises[ 0 ].time;
+  var Time_Limit = workout.exercises[ 0 ].time;
   const PREP_TIME_LEFT = 3;
   var prepTimeLeft = PREP_TIME_LEFT;
   var prepTimePassed = 0;
@@ -44,13 +43,13 @@ export default function Timer() {
   // let prepTime = PREP_TIME_LEFT;
   // let cooldownTimeLeft = COOLDOWN_TIME_LEFT;
   var timerInterval = 0;
-  var restBetweenRounds = workout.RestBetweenRounds;
+  var restBetweenRounds = workout.restBetweenRounds;
   // var workoutCoolDown = workout.CooldownTime;
-  // var exercises = workout.Exercises;
+  // var exercises = workout.exercises;
   var exercise = 0; //Keeps track of the current exercise we are on
   //Variable that will count down number of rounds
-  var numExercises = workout.Exercises.length;
-  var round = workout.NumberOfRounds;
+  var numExercises = workout.exercises.length;
+  var round = workout.numberOfRounds;
   var isPaused = false;
   var wasPaused = false;
   var rest = false;
@@ -93,7 +92,7 @@ export default function Timer() {
     // prepare();
     prepare();
     // Ok, so you can access the stuff from the JSON pretty easy. Now just apply it to a function for the timer. Set some mutable variables that are based of the times and get cracking.
-    // console.log(workout.Exercises[0].name);
+    // console.log(workout.exercises[0].name);
     return () => {
       onTimesUp();
     }
@@ -149,7 +148,7 @@ export default function Timer() {
             console.log( 'Rest Done' );
             // exercise++; //Move index for next exercise
             clearInterval( timerInterval );
-            restBetweenRounds = workout.RestBetweenRounds;
+            restBetweenRounds = workout.restBetweenRounds;
             // rest = false;
             setCircleDasharray();
             setRemainingPathColor( restBetweenRounds );
@@ -161,7 +160,7 @@ export default function Timer() {
             setCircleDasharray2();
             setRemainingPathColor( restBetweenRounds );
             document.getElementById("current-exercise").innerHTML = "REST";
-            document.getElementById("next-up").innerHTML = workout.Exercises[0].name;
+            document.getElementById("next-up").innerHTML = workout.exercises[0].name;
           }
         }, 1000 );
       }
@@ -185,12 +184,12 @@ export default function Timer() {
       //Set restAfter value to see if the current exercise has a restAfter
       //Update information for current exercise and nextUp. Also show rep target.
       if(wasPaused) {
-        // Time_Limit = workout.Exercises[result].time;
-        Time_Limit = workout.Exercises[result].time;
+        // Time_Limit = workout.exercises[result].time;
+        Time_Limit = workout.exercises[result].time;
         wasPaused = false;
         console.log(time);
       } else {
-        Time_Limit = workout.Exercises[result].time;
+        Time_Limit = workout.exercises[result].time;
         time = Time_Limit;
         Warning_Threshold = time/2;
         Alert_Threshold = (time/2)/2;
@@ -229,9 +228,9 @@ export default function Timer() {
           if(time===0) {
             document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( 0 );
             //Check if current exercise has rest after it. Set boolean rest to true and add new conditional for rest time. Reset time to be time for rest. 
-            if(workout.Exercises[exercise].restAfter!==0 && rest!==true) {
+            if(workout.exercises[exercise].restAfter!==0 && rest!==true) {
               rest = true;
-              time = workout.Exercises[exercise].restAfter;
+              time = workout.exercises[exercise].restAfter;
             } else{
               document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
               console.log( 'Exercise done' );
@@ -245,10 +244,10 @@ export default function Timer() {
               exercises();
             }
           } else if(rest===true){
-            runTimer("REST", ((exercise+1<numExercises) && (workout.RestBetweenRounds==0)?workout.Exercises[0].name:"REST"));
+            runTimer("REST", ((exercise+1<numExercises) && (workout.restBetweenRounds==0)?workout.exercises[0].name:"REST"));
           } else {
 
-            runTimer(workout.Exercises[exercise].name, (exercise+1<numExercises?workout.Exercises[exercise+1].name:"REST"));
+            runTimer(workout.exercises[exercise].name, (exercise+1<numExercises?workout.Exercises[exercise+1].name:"REST"));
           }
         }, 1000 );
       }
@@ -258,8 +257,8 @@ export default function Timer() {
   //Modify prepare and startTimer to be one function that just starts the workout, as defined above.
   let prepare = () => {
     document.getElementById("current-exercise").innerHTML = workout.Exercises[0].name;
-    document.getElementById("next-up").innerHTML = (1<numExercises?workout.Exercises[1].name:"REST");
-    document.getElementById("rounds-remaining").innerHTML = workout.NumberOfRounds;
+    document.getElementById("next-up").innerHTML = (1<numExercises?workout.exercises[1].name:"REST");
+    document.getElementById("rounds-remaining").innerHTML = workout.numberOfRounds;
     timerInterval = setInterval( () => {
       prepTimePassed = prepTimePassed += 1;
       prepTimeLeft = PREP_TIME_LEFT - prepTimePassed;
@@ -333,8 +332,8 @@ export default function Timer() {
     document.getElementById( "base-timer-path-remaining" ).setAttribute( "stroke-dasharray", circleDasharray );
   }
   let calculateTimeFraction2 = () => {
-    const rawTimeFraction = restAfterRound / workout.RestBetweenRounds;
-    return rawTimeFraction - ( 1 / workout.RestBetweenRounds ) * ( 1 - rawTimeFraction );
+    const rawTimeFraction = restAfterRound / workout.restBetweenRounds;
+    return rawTimeFraction - ( 1 / workout.restBetweenRounds ) * ( 1 - rawTimeFraction );
   }
 
   // Update the dasharray calue as time passes, starting with 283

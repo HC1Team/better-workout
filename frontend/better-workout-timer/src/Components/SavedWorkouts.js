@@ -3,6 +3,7 @@ import './Styles/App.css';
 import './Styles/savedWorkouts.css';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Button from 'react-bootstrap/Button';
 
 const axios = require('axios');
 
@@ -10,6 +11,7 @@ export default function SavedWorkouts() {
   var sampleWorkouts = [
     { "workoutID": "Workout1",
       "numberOfRounds": 3,
+      "restBetweenRounds": 30,
       "exercises":
         [
           {"exerciseName":"Pull ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 60},
@@ -20,6 +22,7 @@ export default function SavedWorkouts() {
     },
     { "workoutID": "Workout2",
       "numberOfRounds": 3,
+      "restBetweenRounds": 30,
       "exercises":
         [
           {"exerciseName":"Pulsing Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 30},
@@ -30,6 +33,7 @@ export default function SavedWorkouts() {
     },
     { "workoutID": "Workout3",
       "numberOfRounds": 3,
+      "restBetweenRounds": 30,
       "exercises":
         [
           {"exerciseName":"Push-Ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30},
@@ -128,10 +132,16 @@ export default function SavedWorkouts() {
                     </ListGroup.Item>
                     })}
                 </ListGroup>
+                <Card.Footer>
+                  <Button variant="success" onClick={() => {
+                    const history = useHistory();
+                    let path = "/timer"
+                    history.push({pathname:path, state:{workout: w}})
+                    }}>Start Workout!</Button>
+                </Card.Footer>
               </Card.Body>
             </Card>
           })}
-          
         </div>
       </div>
     );
