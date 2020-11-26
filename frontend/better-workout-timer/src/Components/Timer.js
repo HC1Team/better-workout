@@ -230,6 +230,7 @@ export default function Timer(props) {
           if(time===0) {
             document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( 0 );
             //Check if current exercise has rest after it. Set boolean rest to true and add new conditional for rest time. Reset time to be time for rest. 
+            // Fix rest after for each exercise
             if(workout.exercises[exercise].restAfter!==0 && rest!==true) {
               rest = true;
               time = workout.exercises[exercise].restAfter;

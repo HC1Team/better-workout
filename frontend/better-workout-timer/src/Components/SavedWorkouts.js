@@ -13,6 +13,7 @@ export default function SavedWorkouts() {
     { "workoutID": "Workout1",
       "numberOfRounds": 3,
       "restBetweenRounds": 30,
+      "restAfterExercise": 10,
       "exercises":
         [
           {"exerciseName":"Pull ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 60},
@@ -24,6 +25,7 @@ export default function SavedWorkouts() {
     { "workoutID": "Workout2",
       "numberOfRounds": 3,
       "restBetweenRounds": 30,
+      "restAfterExercise": 10,
       "exercises":
         [
           {"exerciseName":"Pulsing Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 30},
@@ -35,6 +37,7 @@ export default function SavedWorkouts() {
     { "workoutID": "Workout3",
       "numberOfRounds": 3,
       "restBetweenRounds": 30,
+      "restAfterExercise": 10,
       "exercises":
         [
           {"exerciseName":"Push-Ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30},
