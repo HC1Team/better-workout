@@ -5,25 +5,28 @@
 }
 
 .workout-card {
-  display: inline-flexbox;
+  display: block;
   padding: 5px;
   padding-right: 0px;
   width: auto;
-
 }
 
 .workout-title {
-  color: black;
+  color: aliceblue;
 }
 
 .exercise-info-top {
-  font-size: 2rem;
+  font-size: 14px;
   font-weight: bold;
+  color: black;
+  padding-right: 10px;
 }
 
 .exercise-info-bottom {
-  font-size: 3rem;
+  font-size: 12px;
   font-style: italic;
+  color: black;
+  padding-right: 10px;
 }
 
 .exercise-info-item1 {
@@ -61,4 +64,6 @@
   ;
   justify-content: center;
   text-align: center;
+  background-color: #17a2b8!important;
+  border-color: black;
 }

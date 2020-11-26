@@ -19,8 +19,8 @@ class App extends Component {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/timer" component={Timer} />
-            <Route path="/savedRoutines" component={SavedWorkouts} />
-            <Route path="/createRoutines" component={CreateWorkouts} />
+            <Route path="/savedWorkouts" component={SavedWorkouts} />
+            <Route path="/createWorkouts" component={CreateWorkouts} />
           </Switch>
         </div>
       </Router>

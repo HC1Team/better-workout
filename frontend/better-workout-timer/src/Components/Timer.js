@@ -11,10 +11,12 @@ import {Prompt, Redirect, useHistory, Link} from 'react-router-dom';
 export default function Timer(props) {
   // How do I test that props isn't empty?
   const [testWorkout, setTestWorkout] = useState(props.location.state.workout);
+  console.log("testWorkout");
   console.log(testWorkout);
   // Use this example workout to test out your startWorkout Function
   //The actual response will be pretty simple. Rest after workout will be static and the same for each workout, no prep time other than current function, no cooldown time, workout just ends.
   const workout = testWorkout;
+  console.log("workout");
   console.log(workout);
   //{
   //   "workoutID": "Routine 1",
@@ -160,7 +162,7 @@ export default function Timer(props) {
             setCircleDasharray2();
             setRemainingPathColor( restBetweenRounds );
             document.getElementById("current-exercise").innerHTML = "REST";
-            document.getElementById("next-up").innerHTML = workout.exercises[0].name;
+            document.getElementById("next-up").innerHTML = workout.exercises[0].exerciseName;
           }
         }, 1000 );
       }
@@ -244,10 +246,10 @@ export default function Timer(props) {
               exercises();
             }
           } else if(rest===true){
-            runTimer("REST", ((exercise+1<numExercises) && (workout.restBetweenRounds==0)?workout.exercises[0].name:"REST"));
+            runTimer("REST", ((exercise+1<numExercises) && (workout.restBetweenRounds==0)?workout.exercises[0].exerciseName:"REST"));
           } else {
 
-            runTimer(workout.exercises[exercise].name, (exercise+1<numExercises?workout.Exercises[exercise+1].name:"REST"));
+            runTimer(workout.exercises[exercise].exerciseName, (exercise+1<numExercises?workout.exercises[exercise+1].exerciseName:"REST"));
           }
         }, 1000 );
       }
@@ -256,8 +258,8 @@ export default function Timer(props) {
 
   //Modify prepare and startTimer to be one function that just starts the workout, as defined above.
   let prepare = () => {
-    document.getElementById("current-exercise").innerHTML = workout.Exercises[0].name;
-    document.getElementById("next-up").innerHTML = (1<numExercises?workout.exercises[1].name:"REST");
+    document.getElementById("current-exercise").innerHTML = workout.exercises[0].exerciseName;
+    document.getElementById("next-up").innerHTML = (1<numExercises?workout.exercises[1].exerciseName:"REST");
     document.getElementById("rounds-remaining").innerHTML = workout.numberOfRounds;
     timerInterval = setInterval( () => {
       prepTimePassed = prepTimePassed += 1;

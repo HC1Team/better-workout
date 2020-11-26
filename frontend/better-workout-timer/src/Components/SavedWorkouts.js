@@ -4,6 +4,7 @@ import './Styles/savedWorkouts.css';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
+import {useHistory} from 'react-router-dom';
 
 const axios = require('axios');
 
@@ -45,7 +46,7 @@ export default function SavedWorkouts() {
   ]
 
   const [workouts, setWorkouts] = useState([]);
-
+  const history = useHistory();
   // useEffect(() => {
   //   //Set up initial stuff
   //   getWorkouts();
@@ -109,17 +110,18 @@ export default function SavedWorkouts() {
         {/* Container for your cards */}
         <div className="large-container">
           {/* Each card will be mapped out here, but for now you'll just make some temp one's until you have what you need */}
-          {sampleWorkouts.map( (w ,idx) => {
+          {sampleWorkouts.map( (w ,idx) => (
             <Card 
               key={idx}
+              bg="dark"
               className="workout-card"
             >
               <Card.Body
-                key={e+idx}
+                key={w+idx}
               >
                 <Card.Title id={w.workoutID} className="workout-title">{w.workoutID}</Card.Title>
                 <ListGroup variant="flush">
-                  {w.exercises.map((e, idx) => {
+                  {w.exercises.map((e, idx) => (
                     <ListGroup.Item className="exercise-info-container">
                       <p className="exercise-info-item1 exercise-info-top">Exercise:</p>
                       <p className="exercise-info-item2 exercise-info-top">Muscle Group:</p>
@@ -130,18 +132,17 @@ export default function SavedWorkouts() {
                   <p className="exercise-info-item7 exercise-info-bottom">{e.repTarget}</p>
                   <p className="exercise-info-item8 exercise-info-bottom">{e.time}</p>
                     </ListGroup.Item>
-                    })}
+                ))}
                 </ListGroup>
                 <Card.Footer>
                   <Button variant="success" onClick={() => {
-                    const history = useHistory();
                     let path = "/timer"
                     history.push({pathname:path, state:{workout: w}})
                     }}>Start Workout!</Button>
                 </Card.Footer>
               </Card.Body>
             </Card>
-          })}
+          ))}
         </div>
       </div>
     );
