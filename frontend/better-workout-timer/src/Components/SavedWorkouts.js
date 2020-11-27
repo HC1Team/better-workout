@@ -4,11 +4,12 @@ import './Styles/savedWorkouts.css';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
+import {FaPlus} from 'react-icons/fa'
 import {useHistory} from 'react-router-dom';
 
 const axios = require('axios');
 
-export default function SavedWorkouts() {
+export default function SavedWorkouts(props) {
   var sampleWorkouts = [
     { "workoutID": "Workout1",
       "numberOfRounds": 3,
@@ -50,8 +51,10 @@ export default function SavedWorkouts() {
 
   const [workouts, setWorkouts] = useState([]);
   const history = useHistory();
+
+  //Call the backend and get workouts from database.
   // useEffect(() => {
-  //   //Set up initial stuff
+  //   //Set up initial stuff. Call the backend and get workouts from database.
   //   getWorkouts();
   //   return () => {
   //     //clean stuff up if needed
@@ -71,6 +74,10 @@ export default function SavedWorkouts() {
         });
   }
 
+  function createWorkout() {
+    //Redirect user to Create Workouts
+    return history.push("/createWorkouts");
+  }
 
   // state = {
   //   response: '',
@@ -146,9 +153,11 @@ export default function SavedWorkouts() {
                 </Card.Footer>
               </Card.Body>
             </Card>
-            <br/>
             </>
           ))}
+        </div>
+        <div>
+          <Button id="create-workout" className="create-workout" onClick={createWorkout}><FaPlus/></Button>
         </div>
       </div>
     );

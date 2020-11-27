@@ -4,8 +4,9 @@ import Nav from 'react-bootstrap/Nav';
 import NavItem from 'react-bootstrap/NavItem';
 import { Link } from 'react-router-dom';
 
-class Navigation extends Component {
-  render(){
+function Navigation(props){
+  //If needed add props to be passed to the Nav like in other project to remember data.
+  //You might just use useEffects to call the database every time you load the page since there aren't user profiles in this app yet.
     return (
       <Nav className="NAV-my-nav">
         {/* <ul className="App-nav-links"> */}
@@ -25,7 +26,6 @@ class Navigation extends Component {
         {/* </ul> */}
       </Nav>
     );
-  } 
 }
 
 export default Navigation;

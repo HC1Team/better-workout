@@ -3,7 +3,7 @@
   align-content: center;
   display: inline-flex;
   justify-content: space-between;
-  margin: 0;
+  margin-top: 20px;
   /* overflow-x: hidden; */
 }
 
@@ -17,7 +17,9 @@
   padding: 5px;
   padding-right: 0px;
   padding-left: 0px;
-  width: 400px;
+  width: 450px;
+  border-radius: 3%;
+  margin: 20px 0;
 }
 
 .workout-title {
@@ -26,16 +28,27 @@
 
 .exercise-info-top {
   font-size: 14px;
+  position: relative;
   font-weight: bold;
   color: black;
-  padding-right: 10px;
+  /* padding: 0 10px; */
+  text-align: left;
+  left: 0;
+  margin-right: 10px;
+  margin-left: 5px;
 }
 
 .exercise-info-bottom {
-  font-size: 12px;
+  font-size: 14px;
+  position: relative;
+  text-align: left;
+  font-weight: 500;
   font-style: italic;
-  color: black;
-  padding-right: 10px;
+  color: aliceblue;
+  /* padding: 0 10px; */
+  left: 0;
+  margin-right: 10px;
+  margin-left: 5px;
 }
 
 .exercise-info-item1 {
@@ -75,4 +88,14 @@
   text-align: center;
   background-color: #17a2b8!important;
   border-color: black;
+}
+
+.create-workout {
+  position: fixed;
+  border-radius: 50%;
+  bottom: 30px;
+  right: 30px;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 9px;
 }
