@@ -74,6 +74,7 @@
 }
 .exercise-info-item8 {
   grid-area: "time";
+  margin-right: 0;
 }
 
 
@@ -99,3 +100,4 @@
   text-align: center;
   padding-bottom: 9px;
 }
+

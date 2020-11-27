@@ -3,7 +3,7 @@ import './Styles/App.css';
 import './Styles/timer.css'
 import Button from 'react-bootstrap/Button';
 import { FaPause, FaPlay, FaStop } from 'react-icons/fa';
-import {Prompt, Redirect, useHistory, Link} from 'react-router-dom';
+import {Prompt, useHistory, Link} from 'react-router-dom';
 
 
 

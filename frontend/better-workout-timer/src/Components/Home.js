@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import "./Styles/App.css";
 import { Link } from 'react-router-dom';
 
@@ -16,11 +16,12 @@ function Home(props) {
       ]});
 
     useEffect(() => {
-      //Call function to setRandomWorkout
+      //Call function to setRandomWorkout by pulling from database of workouts
       return () => {
         //Not sure what to cleanup yet
       }
     })
+
     return (
       <div className="App">
         <h1>Better Workout Timer</h1>

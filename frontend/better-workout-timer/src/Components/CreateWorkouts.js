@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
+import ReturnHome from './ReturnHome';
 import './Styles/App.css';
 
 export default function CreateWorkouts() {
@@ -38,6 +39,7 @@ export default function CreateWorkouts() {
   
     return (
       <div className="App">
+        <ReturnHome />
         <h1>Create Routines</h1>
       </div>
     );

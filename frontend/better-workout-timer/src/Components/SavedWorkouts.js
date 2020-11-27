@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import './Styles/App.css';
 import './Styles/savedWorkouts.css';
 import Card from 'react-bootstrap/Card';
@@ -6,6 +6,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import {FaPlus} from 'react-icons/fa'
 import {useHistory} from 'react-router-dom';
+import ReturnHone from './ReturnHome';
 
 const axios = require('axios');
 
@@ -118,6 +119,7 @@ export default function SavedWorkouts(props) {
       <div className="App">
         <h1>Saved Routines</h1>
         {/* Container for your cards */}
+        <ReturnHone />
         <div className="large-container column">
           {/* Each card will be mapped out here, but for now you'll just make some temp one's until you have what you need */}
           {sampleWorkouts.map( (w ,idx) => (
@@ -141,7 +143,7 @@ export default function SavedWorkouts(props) {
                   <p className="exercise-info-item5 exercise-info-bottom">{e.exerciseName}</p>
                   <p className="exercise-info-item6 exercise-info-bottom">{e.muscleGroup}</p>
                   <p className="exercise-info-item7 exercise-info-bottom">{e.repTarget}</p>
-                  <p className="exercise-info-item8 exercise-info-bottom">{e.time}</p>
+                  <p className="exercise-info-bottom exercise-info-item8">{e.time}s</p>
                     </ListGroup.Item>
                 ))}
                 </ListGroup>

@@ -193,3 +193,13 @@ button.create-routines-btn:hover {
   justify-content: center;
   text-align: center;
 }
+
+.go-home-button {
+  position: fixed;
+  border-radius: 50%;
+  top: 20px;
+  left: 20px;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 9px;
+}

@@ -15,7 +15,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <Navigation />
+          {/* <Navigation /> */}
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/timer" component={Timer} />
