@@ -134,6 +134,7 @@ export default function SavedWorkouts(props) {
                 key={w+idx}
               >
                 <Card.Title id={w.workoutID} className="workout-title">{w.workoutID}</Card.Title>
+                <Card.Text className="rounds">{`Rounds: ${w.numberOfRounds}`}</Card.Text>
                 <ListGroup variant="flush">
                   {w.exercises.map((e, idy) => (
                     <ListGroup.Item key={idy} className="exercise-info-container">

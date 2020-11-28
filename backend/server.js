@@ -15,6 +15,6 @@ let server = app.listen(HTTP_PORT, function () {
 
     let host = server.address().address
     let port = server.address().port
-  
+
     console.log("App listening at local", host, port)
 })
