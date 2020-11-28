@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import {FaHome} from 'react-icons/fa';
 import {useHistory} from 'react-router-dom';
 
-
+//A button that takes the user back to the home page
 export default function ReturnHome() {
   const history = useHistory();
   function goHome() {

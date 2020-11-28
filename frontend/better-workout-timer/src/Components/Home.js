@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 
 function Home(props) {
     const [randomWorkout, setRandomWorkout] = useState({"workoutID": "Workout3",
-    "numberOfRounds": 3,
+    "numberOfRounds": 2,
     "restBetweenRounds": 30,
     "restAfterExercise": 10,
     "exercises":
       [
         {"exerciseName":"Push-Ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30},
-        {"exerciseName":"Burpees", "muscleGroup": "Upper Body", "repTarget": 10, "time": 60},
-        {"exerciseName":"Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 60},
-        {"exerciseName":"Plank", "muscleGroup": "Abs", "repTarget": 0, "time": 45}
+        {"exerciseName":"Burpees", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30},
+        {"exerciseName":"Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 30},
+        {"exerciseName":"Plank", "muscleGroup": "Abs", "repTarget": 0, "time": 30}
       ]});
 
     useEffect(() => {

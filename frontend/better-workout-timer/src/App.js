@@ -7,7 +7,7 @@ import Timer from './Components/Timer';
 import SavedWorkouts from './Components/SavedWorkouts';
 import CreateWorkouts from './Components/CreateWorkouts';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Navigation from './Components/Nav';
+// import Navigation from './Components/Nav'; //Was used for debugging purposes
 
 class App extends Component {
 

@@ -147,52 +147,6 @@ button.create-routines-btn:hover {
   }
 }
 
-.timer-info-top-item {
-  /* height: 1rem; */
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 0 2rem 0 2rem;
-  /* margin-right: 45px; */
-}
-.timer-info-item1 {
-  grid-area: 'rounds-remaining-title';
-  /* margin-left: 40px; */
-  color: #6fcee9;
-}
-
-.timer-info-item2 {
-  grid-area: 'current-exercise-title';
-  color: rgb(115, 221, 94);
-}
-.timer-info-item3 {
-  grid-area: 'next-up-title';
-  color: rgb(201, 160, 221);
-}
-.timer-info-bottom-item {
-  /* height: 20px; */
-  margin-top: 0;
-  font-size: smaller;
-  padding: 0 2rem 0 2rem;
-  font-weight: 500;
-}
-.timer-info-item4 {
-  grid-area: 'rounds-remaining';
-}
-.timer-info-item5 {
-  grid-area: 'current-exercise';
-}
-.timer-info-item6 {
-  grid-area:'next-up';
-}
-
-.timer-info-container {
-  display: grid;
-  grid-template-areas: 
-  'rounds-remaining-title current-exercise-title next-up-title'
-  'rounds-remaining current-exercise next-up';
-  justify-content: center;
-  text-align: center;
-}
 
 .go-home-button {
   position: fixed;

@@ -10,6 +10,7 @@ import ReturnHone from './ReturnHome';
 
 const axios = require('axios');
 
+//Renders cards showing the savedWorkouts in the database
 export default function SavedWorkouts(props) {
   var sampleWorkouts = [
     { "workoutID": "Workout1",
@@ -114,7 +115,7 @@ export default function SavedWorkouts(props) {
   //   this.setState({ responseToPost: body });
   // };
   
-    //TODO: Test how it looks like!
+    //Renders the cards and everything else
     return (
       <div className="App">
         <h1>Saved Routines</h1>
@@ -164,31 +165,3 @@ export default function SavedWorkouts(props) {
       </div>
     );
 }
-
-{/* <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-        <p>{this.state.response}</p>
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>Post to Server:</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
-          />
-          <button type="submit">Submit</button>
-        </form>
-        <p>{this.state.responseToPost}</p> */}

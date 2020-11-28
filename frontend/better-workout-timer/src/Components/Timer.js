@@ -4,7 +4,7 @@ import './Styles/timer.css'
 import Button from 'react-bootstrap/Button';
 import { FaPause, FaPlay, FaStop } from 'react-icons/fa';
 import {Prompt, useHistory, Link} from 'react-router-dom';
-
+// import {} from './Audio/Countdown_to_Continue.mp3'
 
 
 // Make sure to turn off timer when moving from page to page or prevent user from moving from page to page
@@ -37,17 +37,11 @@ export default function Timer(props) {
   const PREP_TIME_LEFT = 3;
   var prepTimeLeft = PREP_TIME_LEFT;
   var prepTimePassed = 0;
-  // const COOLDOWN_TIME_LEFT = workout.CooldownTime;
   const FULL_DASH_ARRAY = 283;
-  //Tracks the time per each exercise. Initially is the first exercise. Maybe it should be PrepTime instead...?
-  // var time = (workout.PrepareTime!==0?workout.PrepareTime:Time_Limit);
+  //Tracks the time per each exercise. Initially is the first exercise.
   var time = Time_Limit;
-  // let prepTime = PREP_TIME_LEFT;
-  // let cooldownTimeLeft = COOLDOWN_TIME_LEFT;
   var timerInterval = 0;
   var restBetweenRounds = workout.restBetweenRounds;
-  // var workoutCoolDown = workout.CooldownTime;
-  // var exercises = workout.exercises;
   var exercise = 0; //Keeps track of the current exercise we are on
   //Variable that will count down number of rounds
   var numExercises = workout.exercises.length;
@@ -55,10 +49,10 @@ export default function Timer(props) {
   var isPaused = false;
   var wasPaused = false;
   var rest = false;
-  var cooldown = false;
   let prepTime = [ "Ready", "Set", "Go!", "" ];
   const [timerIsRunning, setTimerIsRunning] = useState(true);
-
+  // var countdownToStart = {};
+  // var countdownToContinue = {};
 
   // Warning occurs at whatever half time is for any particular exercise.
   var Warning_Threshold = time/2;
@@ -81,18 +75,20 @@ export default function Timer(props) {
       color: "lavender"
     }
   };
+  //Set remainingPathColor initially to green
   let remainingPathColor = COLOR_CODES.info.color;
 
-  const [noChange, setNoChange] = useState(true);
-
+  //Starts the timer when the page loads
   useEffect( () => {
     // document.getElementById("time-remaining").innerHTML = "Ready";
     document.getElementById( "time-remaining" ).innerHTML = prepTime[ 0 ];
     // prepare();
+    // countdownToStart = document.getElementById("countdown-to-start");
+    // countdownToContinue = document.getElementById("countdown-to-continue");
+    // countdownToStart.play();
     prepare();
-    // Ok, so you can access the stuff from the JSON pretty easy. Now just apply it to a function for the timer. Set some mutable variables that are based of the times and get cracking.
-    // console.log(workout.exercises[0].name);
     return () => {
+      //Makes sure the timer stops running when a different page is rendered
       onTimesUp();
     }
   });
@@ -119,7 +115,7 @@ export default function Timer(props) {
       // await waitRound();
     } else {
       // Workout is complete
-      alert( 'Workout complete!' );
+
       let done = "DONE";
       document.getElementById("current-exercise").innerHTML = done;
       document.getElementById("next-up").innerHTML = done;
@@ -130,10 +126,14 @@ export default function Timer(props) {
       //Run cooldownTimer if there is a coolDownTime
       setTimerIsRunning(false);
       console.log(timerIsRunning);
+      onTimesUp();
+      alert( 'Workout complete!' );
+      round=0;
+      history.push({pathname:"/"});
     }
   }
 
-
+  //Runs time for rest after a round
   function restAfterRound() {
     return new Promise( resolve => {
       if ( !isPaused ) {
@@ -145,15 +145,11 @@ export default function Timer(props) {
           if(restBetweenRounds===0) {
             document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( restBetweenRounds );
             console.log( 'Rest Done' );
-            // exercise++; //Move index for next exercise
             clearInterval( timerInterval );
             restBetweenRounds = workout.restBetweenRounds;
             rest = false;
             setCircleDasharray();
             setRemainingPathColor( restBetweenRounds );
-            // Add some delay before moving on to next exercise
-            // document.getElementById("base-timer-path-remaining").classList.remove(COLOR_CODES.alert.color);
-            // document.getElementById("base-timer-path-remaining").classList.add(COLOR_CODES.info.color);
             exercises();
           } else {
             restBetweenRounds--;
@@ -195,15 +191,9 @@ export default function Timer(props) {
         Warning_Threshold = time/2;
         Alert_Threshold = (time/2)/2;
       }
-      
-
-
+      //Run a particular exercise
       await runExercise();
-      // document.getElementById( "time-remaining" ).innerHTML = formatTimeLeft( time );
       remainingPathColor = COLOR_CODES.info.color;
-      
-      //Check if the restAfter value is not zero so you can run rest after timer
-      // await runRestAfter();
     } else {
       round--;
       exercise = 0;
@@ -250,7 +240,6 @@ export default function Timer(props) {
           } else if(rest===true){
             runTimer("REST", (exercise+1<numExercises?workout.exercises[exercise+1].exerciseName:"REST"));
           } else {
-
             runTimer(workout.exercises[exercise].exerciseName, (exercise+1<numExercises && workout.restAfterExercise===0?workout.exercises[exercise+1].exerciseName:"REST"));
           }
         }, 1000 );
@@ -258,15 +247,15 @@ export default function Timer(props) {
     } )
   }
 
-  //Modify prepare and startTimer to be one function that just starts the workout, as defined above.
+  //Start the timer and prepares user to get ready for workout
   let prepare = () => {
     document.getElementById("current-exercise").innerHTML = workout.exercises[0].exerciseName;
     document.getElementById("next-up").innerHTML = (1<numExercises?workout.exercises[1].exerciseName:"REST");
     document.getElementById("rounds-remaining").innerHTML = workout.numberOfRounds;
+    // countdownToStart.play();
     timerInterval = setInterval( () => {
       prepTimePassed = prepTimePassed += 1;
       prepTimeLeft = PREP_TIME_LEFT - prepTimePassed;
-
       if ( prepTimeLeft === 1 ) {
         onTimesUp();
         document.getElementById( "time-remaining" ).innerHTML = prepTime[2];
@@ -335,30 +324,22 @@ export default function Timer(props) {
     ).toFixed( 0 )} 283`;
     document.getElementById( "base-timer-path-remaining" ).setAttribute( "stroke-dasharray", circleDasharray );
   }
-  let calculateTimeFraction2 = () => {
-    const rawTimeFraction = restAfterRound / workout.restBetweenRounds;
-    return rawTimeFraction - ( 1 / workout.restBetweenRounds ) * ( 1 - rawTimeFraction );
-  }
+  // let calculateTimeFraction2 = () => {
+  //   const rawTimeFraction = restAfterRound / workout.restBetweenRounds;
+  //   return rawTimeFraction - ( 1 / workout.restBetweenRounds ) * ( 1 - rawTimeFraction );
+  // }
 
-  // Update the dasharray calue as time passes, starting with 283
-  let setCircleDasharray2 = () => {
-    const circleDasharray = `${(
-      calculateTimeFraction2() * FULL_DASH_ARRAY
-    ).toFixed( 0 )} 283`;
-    document.getElementById( "base-timer-path-remaining" ).setAttribute( "stroke-dasharray", circleDasharray );
-  }
+  // // Update the dasharray calue as time passes, starting with 283
+  // let setCircleDasharray2 = () => {
+  //   const circleDasharray = `${(
+  //     calculateTimeFraction2() * FULL_DASH_ARRAY
+  //   ).toFixed( 0 )} 283`;
+  //   document.getElementById( "base-timer-path-remaining" ).setAttribute( "stroke-dasharray", circleDasharray );
+  // }
 
   let setRemainingPathColor = ( timeLeft ) => {
     // Add a color for rest and cooldown. Maybe change background color
     const { alert, warning, info, rest_ } = COLOR_CODES;
-    // If the boolean rest==true, make the default color rest_.color
-    // if ( rest===true ) {
-    //   document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
-    //   document.getElementById( "base-timer-path-remaining" ).classList.add( rest_.color );
-    // } else if ( cooldown ) { //If boolean cooldown==true, make the default color cooldown_.color
-    //   document.getElementById( "base-timer-path-remaining" ).classList.remove( alert.color );
-    //   document.getElementById( "base-timer-path-remaining" ).classList.add( cooldown_.color );
-    // }
     // If the remaining time is less than or equal to 1/4 time, remove the "warning" class and apply the "alert" class.
     alert.threshold = Alert_Threshold;
     warning.threshold = Warning_Threshold; 
@@ -404,15 +385,13 @@ export default function Timer(props) {
     document.getElementById( "play" ).style.display = "none";
     document.getElementById( "pause" ).style.display = "inline-block";
   }
-
+  //Quits the workout tiemr, but pauses to give user a chance to start again
   function quit() {
     onTimesUp();
     isPaused = true;
     document.getElementById( "pause" ).style.display = "none";
     document.getElementById( "play" ).style.display = "inline-block";
     console.log(timerIsRunning);
-    
-    // return (<><Prompt when={timerIsRunning} message="Your woukout isn't over! Quit workout?"/>{history.push("/")}</>)
   }
 
   let pathClasses = [ 'base-timer__path-remaining', remainingPathColor ].join( ' ' );
@@ -421,6 +400,13 @@ export default function Timer(props) {
   return (
     <div id="timer" className="App">
       {/* <h1>Timer</h1> */ }
+      {/* Audio does not work right now. It tries to run it through another port for some reason */}
+      {/* <audio id="countdown-to-start">
+        <source src="Countdown_to_Start.mp3" type="audio/mpeg"/>
+      </audio>
+      <audio id="countdown-to-continue">
+        <source src="Countdown_to_Continue.mp3" type="audio/mpeg"/>
+      </audio> */}
       <div className="timer-info-container">
         <p className="timer-info-item1 timer-info-top-item">Rounds Remaining</p>
         <p className="timer-info-item2 timer-info-top-item">Current Exercise</p>
