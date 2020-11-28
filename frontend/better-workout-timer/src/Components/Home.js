@@ -1,32 +1,53 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import "./Styles/App.css";
 import { Link } from 'react-router-dom';
 
-class Home extends Component {
-render() {
+function Home(props) {
+    const [randomWorkout, setRandomWorkout] = useState({"workoutID": "Workout3",
+    "numberOfRounds": 2,
+    "restBetweenRounds": 30,
+    "restAfterExercise": 10,
+    "exercises":
+      [
+        {"exerciseName":"Push-Ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30},
+        {"exerciseName":"Burpees", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30},
+        {"exerciseName":"Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 30},
+        {"exerciseName":"Plank", "muscleGroup": "Abs", "repTarget": 0, "time": 30}
+      ]});
+
+    useEffect(() => {
+      //Call function to setRandomWorkout by pulling from database of workouts
+      return () => {
+        //Not sure what to cleanup yet
+      }
+    })
+
     return (
       <div className="App">
         <h1>Better Workout Timer</h1>
         <ul>
           <li>
-            <Link to="/timer">
+            {/* Pass in a random workout from the database */}
+            <Link to={{
+              pathname: "/timer",
+              state: {workout: randomWorkout}
+            }}>
               <button className="home-button quick-start-btn">Quick Start</button>
             </Link>
           </li>
           <li>
-            <Link to="/savedRoutines">
-              <button className="home-button saved-routines-btn">Saved Routines</button>
+            <Link to="/savedWorkouts">
+              <button className="home-button saved-routines-btn">Saved Workouts</button>
             </Link>
           </li>
           <li>
-            <Link to="/createRoutine">
-              <button className="home-button create-routines-btn">Create Routines</button>
+            <Link to="/createWorkouts">
+              <button className="home-button create-routines-btn">Create Workouts</button>
             </Link>
           </li>
         </ul>
       </div>
     );
-  }
 }
 
 export default Home;

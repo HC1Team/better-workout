@@ -30,7 +30,7 @@ create table workoutExercises(
 
 
 
-//insert 
+--insert 
 use betterworkout;
 INSERT INTO exercises (exerciseName,muscleGroup,defaultReps,DefaultSets) VALUES 
     ("Walking High Knees", "Full body",10,3),("Upright Row","Upper Body",10,5),("Overhead Shoulder Press","Upper Body",15,5),
@@ -76,7 +76,7 @@ insert into workoutExercises values ('Kemis Routine','Squats', 10, 10, 10, 10);
 
 
 
-//query
+--query
 use betterworkout;
 
 SELECT exerciseID, timeperexercise, numberofrounds, restbetweenexcersie, restbetweenrounds FROM workoutExercises WHERE workoutID like 'Gards%';

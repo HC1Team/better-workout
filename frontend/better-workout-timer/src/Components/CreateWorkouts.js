@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
+import ReturnHome from './ReturnHome';
 import './Styles/App.css';
 
-class CreateRoutines extends Component {
+export default function CreateWorkouts() {
   // state = {
   //   response: '',
   //   post: '',
@@ -36,13 +37,10 @@ class CreateRoutines extends Component {
   //   this.setState({ responseToPost: body });
   // };
   
-render() {
     return (
       <div className="App">
+        <ReturnHome />
         <h1>Create Routines</h1>
       </div>
     );
-  }
 }
-
-export default CreateRoutines;

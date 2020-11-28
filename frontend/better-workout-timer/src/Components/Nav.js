@@ -1,29 +1,31 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Styles/App.css';
+import Nav from 'react-bootstrap/Nav';
+import NavItem from 'react-bootstrap/NavItem';
 import { Link } from 'react-router-dom';
 
-class Nav extends Component {
-  render(){
+function Navigation(props){
+  //If needed add props to be passed to the Nav like in other project to remember data.
+  //You might just use useEffects to call the database every time you load the page since there aren't user profiles in this app yet.
     return (
-      <nav className="my-nav">
-        <ul className="App-nav-links">
+      <Nav className="NAV-my-nav">
+        {/* <ul className="App-nav-links"> */}
           <Link className="my-nav" to="/" >
-            <li>Home</li>
+            <NavItem>Home</NavItem>
           </Link>
           <Link className="my-nav" to="/timer">
-            <li>Quick Start/Timer</li>
+            <NavItem>Quick Start/Timer</NavItem>
           </Link>
-          <Link className="my-nav" to="/savedRoutines">
-            <li>Saved Routines</li>
+          <Link className="my-nav" to="/savedWorkouts">
+            <NavItem>Saved Workouts</NavItem>
           </Link>
-          <Link className="my-nav" to="/createRoutines">
-            <li>Create Routines</li>
+          <Link className="my-nav" to="/createWorkouts">
+            <NavItem>Create Workouts</NavItem>
           </Link>
           {/* Make Hamburger nav that is hidden */}
-        </ul>
-      </nav>
+        {/* </ul> */}
+      </Nav>
     );
-  } 
 }
 
-export default Nav;
+export default Navigation;
