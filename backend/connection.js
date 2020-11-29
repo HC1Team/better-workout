@@ -4,7 +4,7 @@ const mysql = require('mysql');
 const config = {
     host: 'localhost',
     user: 'root',
-    password: 'Sol1dFoundat1on!',
+    password: 'InsertPasswordHere',
     database: 'betterworkout',
 };
 

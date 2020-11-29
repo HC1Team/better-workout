@@ -12,56 +12,18 @@ const axios = require('axios');
 
 //Renders cards showing the savedWorkouts in the database
 export default function SavedWorkouts(props) {
-  var sampleWorkouts = [
-    { "workoutID": "Workout1",
-      "numberOfRounds": 3,
-      "restBetweenRounds": 30,
-      "restAfterExercise": 10,
-      "exercises":
-        [
-          {"exerciseName":"Pull ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 60},
-          {"exerciseName":"Burpees", "muscleGroup": "Full Body", "repTarget": 10, "time": 60},
-          {"exerciseName":"Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 60},
-          {"exerciseName":"Jump Rope", "muscleGroup": "Full Body", "repTarget": 0, "time": 60}
-        ]
-    },
-    { "workoutID": "Workout2",
-      "numberOfRounds": 3,
-      "restBetweenRounds": 30,
-      "restAfterExercise": 10,
-      "exercises":
-        [
-          {"exerciseName":"Pulsing Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 30},
-          {"exerciseName":"Burpees", "muscleGroup": "Full Body", "repTarget": 10, "time": 60},
-          {"exerciseName":"Supermans", "muscleGroup": "Abs", "repTarget": 0, "time": 60},
-          {"exerciseName":"Pull ups", "muscleGroup": "Upper body", "repTarget": 0, "time": 45}
-        ]
-    },
-    { "workoutID": "Workout3",
-      "numberOfRounds": 3,
-      "restBetweenRounds": 30,
-      "restAfterExercise": 10,
-      "exercises":
-        [
-          {"exerciseName":"Push-Ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30},
-          {"exerciseName":"Burpees", "muscleGroup": "Upper Body", "repTarget": 10, "time": 60},
-          {"exerciseName":"Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 60},
-          {"exerciseName":"Plank", "muscleGroup": "Abs", "repTarget": 0, "time": 45}
-        ]
-    },
-  ]
-
-  const [workouts, setWorkouts] = useState([]);
+  const [workouts, setWorkouts] = useState(props.location.state.workouts);
+  const sampleWorkouts = workouts;
   const history = useHistory();
 
-  //Call the backend and get workouts from database.
-  // useEffect(() => {
-  //   //Set up initial stuff. Call the backend and get workouts from database.
-  //   getWorkouts();
-  //   return () => {
-  //     //clean stuff up if needed
-  //   }
-  // });
+  // Call the backend and get workouts from database.
+  useEffect(() => {
+    //Set up initial stuff. Call the backend and get workouts from database.
+    getWorkouts();
+    return () => {
+      //clean stuff up if needed
+    }
+  });
 
   //Get workouts from database
   //HAS NOT BEEN TESTED. Just skeleton code.
@@ -80,40 +42,6 @@ export default function SavedWorkouts(props) {
     //Redirect user to Create Workouts
     return history.push("/createWorkouts");
   }
-
-  // state = {
-  //   response: '',
-  //   post: '',
-  //   responseToPost: '',
-  // };
-  
-  // componentDidMount() {
-  //   this.callApi()
-  //     .then(res => this.setState({ response: res.express }))
-  //     .catch(err => console.log(err));
-  // }
-  
-  // callApi = async () => {
-  //   const response = await fetch('/api/hello');
-  //   const body = await response.json();
-  //   if (response.status !== 200) throw Error(body.message);
-    
-  //   return body;
-  // };
-  
-  // handleSubmit = async e => {
-  //   e.preventDefault();
-  //   const response = await fetch('/api/world', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ post: this.state.post }),
-  //   });
-  //   const body = await response.text();
-    
-  //   this.setState({ responseToPost: body });
-  // };
   
     //Renders the cards and everything else
     return (

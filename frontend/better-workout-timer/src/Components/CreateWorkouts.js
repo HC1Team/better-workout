@@ -3,10 +3,25 @@ import ReturnHome from './ReturnHome';
 import './Styles/App.css';
 import ExerciseList from "./ExerciseList";
 import uuidv4 from "uuid/v4"
+import { useHistory } from 'react-router-dom';
 
-export default function CreateWorkouts() {
+export default function CreateWorkouts(props) {
   const [ exercises, addExercises ] = useState( [] );
   const exerciseNameRef = useRef();
+  const history = useHistory();
+
+  //Use the below variables and function to simulate adding a new workout to the database.
+  const [workouts, setWorkouts] = useState(props.location.state.workouts);
+  const sampleWorkouts = workouts;
+  var newWorkoutArray = []; //This array will be passed as a prop to the savedWorkouts page when the user is rerouted there after saving. Maybe need to pass it to Home page too? That way the same data is passed around, but that might be a bit much.
+  function addWorkoutToArray(workout) {
+    for(var i=0; i<sampleWorkouts.length+1;){
+      if(i<sampleWorkouts.length)
+      newWorkoutArray[i] = sampleWorkouts[i];
+      else
+      newWorkoutArray[i] = workout;
+    }
+  }
 
 
   function handleAddExercise( e ) {
@@ -52,7 +67,7 @@ export default function CreateWorkouts() {
         </div>
 
         {/*Cancel & Submit Button*/ }
-        <p><button type="button" >Cancel</button><button type="button">Save</button></p>
+        <p><button type="button" onClick={()=>{history.push("/")}} >Cancel</button><button type="button">Save</button></p>
       </form>
     </div>
   );
