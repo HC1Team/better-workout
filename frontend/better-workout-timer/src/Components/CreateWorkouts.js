@@ -40,7 +40,7 @@ export default function CreateWorkouts(props) {
   return (
     <div>
       <ReturnHome />
-      <h1>Create Routines</h1>
+      <h1>Create Workouts</h1>
       <form>
         {/* This section is everything above the actual list of exercises */ }
         <input type="text" id="routineName" name="routineName" placeholder="Routine Name"></input>
