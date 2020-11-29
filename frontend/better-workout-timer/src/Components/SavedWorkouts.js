@@ -46,7 +46,7 @@ export default function SavedWorkouts(props) {
     //Renders the cards and everything else
     return (
       <div className="App">
-        <h1>Saved Routines</h1>
+        <h1>Saved Workouts</h1>
         {/* Container for your cards */}
         <ReturnHone />
         <div className="large-container column">
