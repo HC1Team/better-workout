@@ -68,6 +68,7 @@ export default function CreateRoutines(props){
     numberOfRoundsRef.current.value = null
     restBetweenRoundsRef.current.value = null
     exerciseNameRef.current.value = null
+    document.getElementById("exercises").innerHTML = ""
 
   }
 
@@ -95,7 +96,7 @@ export default function CreateRoutines(props){
          
          {/* This section of code handles the adding of exercises to the CreateRoutines page */}
          <div id = "exerciseList" >
-           <div ref = {exerciseListRef}>
+           <div ref = {exerciseListRef} id = "exercises" >
              {/*the left "exercices" serves as a parameter for ExerciseList, the right "exercises" comes from line  */}
            <ExerciseList exercises = {exercises} /> 
            
