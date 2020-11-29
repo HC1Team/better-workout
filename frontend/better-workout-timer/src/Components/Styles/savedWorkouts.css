@@ -26,6 +26,10 @@
   color: aliceblue;
 }
 
+.rounds {
+  font-size: medium;
+}
+
 .exercise-info-top {
   font-size: 14px;
   position: relative;
