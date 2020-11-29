@@ -74,16 +74,18 @@ export default function CreateRoutines(props){
   // make a function that is called within exerciseToJSON that actually sends the JSON to the backend
   // play around with the styling for the page
 
+  // The following section adds visible content to the CreateRoutines page
   return (
     <div>
       <h1>Create Routines</h1>
-        <form>
+        <div id = "createRoutinesSection" >
+        <form id = "createRoutinesForm">
           {/* This section is everything above the actual list of exercises */}
-          <input type = "text" id = "routineName" name = "routineName" placeholder = "Routine Name" ref = {routineNameRef}></input>
+          <label className = "createRoutineLabel" >Routine Name<input className = "createRoutineInput" type = "text" id = "routineName" name = "routineName" placeholder = "Routine Name" ref = {routineNameRef}></input></label>
           <br></br>
-          <label>Number of Rounds <input type = "text" id = "numberOfRounds" name = "numberOfRounds" ref = {numberOfRoundsRef}></input></label>
+          <label className = "createRoutineLabel" >Number of Rounds <input className = "createRoutineInput" type = "text" id = "numberOfRounds" name = "numberOfRounds" placeholder = "Number of Rounds" ref = {numberOfRoundsRef}></input></label>
           <br></br>
-          <label>Rest between Rounds <input type = "text" id = "restBetweenRounds" name = "restBetweenRounds" ref = {restBetweenRoundsRef}></input></label>
+          <label className = "createRoutineLabel" >Rest Between Rounds <input className = "createRoutineInput" type = "text" id = "restBetweenRounds" name = "restBetweenRounds" placeholder = "Rest Between Rounds" ref = {restBetweenRoundsRef}></input></label>
 
 
           {/* ************************************************************************************************************** */}
@@ -100,18 +102,19 @@ export default function CreateRoutines(props){
            </div>
            <br></br>
 
-           <input type="text" placeholder = "Exercise Name" ref = {exerciseNameRef}/>
+           <input type="text" placeholder = "Exercise Name" className = "createRoutineInput" id = "addExerciseInput" ref = {exerciseNameRef}/>
            <br></br>
-           <button type = "button" id = "addExerciseButton" onClick = {handleAddExercise} >+ Add Exercise</button>
+           <button type = "button" id = "addExerciseButton" className = "createRoutineButton" onClick = {handleAddExercise} >+</button>
 
          </div>
          
          {/*Cancel & Submit Button*/}
          <p>
-           <button type = "button" onClick = {clearForm}>Cancel</button>
-           <button type  = "button" onClick = {exerciseToJSON}>Save</button>
+           <button id = "cancelRoutineButton" className = "createRoutineButton" type = "button" onClick = {clearForm}>Cancel</button>
+           <button id = "saveRoutineButton" className = "createRoutineButton" type  = "button" onClick = {exerciseToJSON}>Save</button>
         </p>
         </form>
+        </div>
     </div>
   )
 }

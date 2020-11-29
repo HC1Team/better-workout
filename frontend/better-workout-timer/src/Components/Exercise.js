@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Exercises( { exercise }) {
     return (
-        <div>
+        <div className = "exercises">
             {exercise.name}
         </div>
     )
