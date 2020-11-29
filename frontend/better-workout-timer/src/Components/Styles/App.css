@@ -221,6 +221,8 @@ button.create-routines-btn:hover {
   border-width: 3px;
   margin-left: 10px;
   text-align: center;
+  font-weight: bold;
+  font-size: 16px;
 
 }
 
