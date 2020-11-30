@@ -18,5 +18,5 @@ Built for HCI Team project at Georgia Southern University, Fall 2020.
 
  **For testing purposes**
  - To test this project run "npm start" from the command line while in the directory /../frontend/better-workout (where the node_modules is located)
- - If it does not run at first, from the same directory run "npm install" to get the required dependecies in node_modules.
+ - If it does not run at first, from the same directory run "npm install" to get the required dependecies in node_modules. Then you can run npm start again.
  - The backend is currently still in production. Needs refinements to better operate with the frontend.
