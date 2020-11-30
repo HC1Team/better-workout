@@ -10,10 +10,8 @@ function Home( props ) {
     "restAfterExercise": 10,
     "exercises":
       [
-        { "exerciseName": "Push-Ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30 },
-        { "exerciseName": "Burpees", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30 },
-        { "exerciseName": "Squats", "muscleGroup": "Lower Body", "repTarget": 10, "time": 30 },
-        { "exerciseName": "Plank", "muscleGroup": "Abs", "repTarget": 0, "time": 30 }
+        { "exerciseName": "Push-Ups", "muscleGroup": "Upper Body", "repTarget": 10, "time": 20 },
+        { "exerciseName": "Burpees", "muscleGroup": "Upper Body", "repTarget": 10, "time": 30 }
       ]
   } );
   const [ sampleWorkouts, setSampleWorkouts ] = useState(
