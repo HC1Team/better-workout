@@ -157,3 +157,98 @@ button.create-routines-btn:hover {
   text-align: center;
   padding-bottom: 9px;
 }
+
+
+
+/* ************************************************** */
+/* ************************************************** */
+/* The following CSS code applies to CreateRoutine.js */
+/* ************************************************** */
+/* ************************************************** */
+
+#exerciseList{
+  margin-top: 15px;
+  margin-left: 350px;
+  margin-right: 350px;
+  /* background-color: lightskyblue; */
+  color: lightskyblue;  
+  border: 2px solid #61dafb;;
+}
+
+.exercises{
+  border-bottom: 1px solid white;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+#createRoutinesForm{
+  background-color: #17a2b8;
+  margin-left: 350px;
+  margin-right: 350px;
+  border: 3px solid black;
+}
+
+.createRoutineLabel{
+  color: Black;
+}
+
+.createRoutineInput{
+  color: white;
+  background-color: lightskyblue;
+  border-color: royalblue;
+  border-width: 3px;
+  margin-left: 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+
+}
+
+#addExerciseInput{
+  margin-left: 5px;
+  margin-right: 5px;
+  
+}
+
+.createRoutineButton{
+  border-radius: 5px;
+  height: 25px;
+  width: 125px;
+  margin: 10px;
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  padding-bottom: 4px;
+}
+
+#addExerciseButton{
+  background-color: blue;
+  border: 1px solid blue;
+  border-radius: 50%;
+  display: inline-block;
+  /* padding: 20px; */
+  width: 15%;
+  height: 20%;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#addExerciseButton:hover {
+  background-color: mediumblue;
+}
+
+#cancelRoutineButton{
+  background-color: red;
+}
+
+#cancelRoutineButton:hover {
+  background-color: firebrick;
+}
+
+#saveRoutineButton{
+  background-color: rgb(90, 180, 79);
+}
+
+#saveRoutineButton:hover {
+  background-color: #3e8e41;
+}
